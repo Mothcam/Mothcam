@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import time
 
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 from libcamera import controls
 
 picam2 = Picamera2()
