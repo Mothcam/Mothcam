@@ -4,6 +4,8 @@ import time
 from picamera2 import Picamera2
 from libcamera import controls
 
+nrfotos = int(sys.argv[1])
+
 picam2 = Picamera2()
 config = picam2.create_still_configuration({"size":(4056, 3040)})
 picam2.configure(config)
@@ -18,7 +20,7 @@ picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
 time.sleep(2)
 
 start_time = time.time()
-for i in range(1, 2):
+for i in range(1, nrfotos):
     file_path = '/home/Camera/Pictures'
     r = picam2.capture_request(file_path)
     r.save("main", f"Image{i}.jpg")
