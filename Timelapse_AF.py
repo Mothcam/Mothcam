@@ -4,7 +4,7 @@ import time
 from picamera2 import Picamera2
 from libcamera import controls
 
-
+# Set variables and camera configuration
 date = time.strft
 picam2 = Picamera2()
 config = picam2.create_still_configuration({"size":(4056, 3040)})
@@ -18,7 +18,7 @@ picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
 
 # And wait for those settings to take effect
 time.sleep(2)
-
+# Loop starts here
 start_time = time.time()
 for i in range(1, 2):
     file_path = '/home/Camera/Pictures'
