@@ -20,7 +20,9 @@ picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
 time.sleep(2)
 # Loop starts here
 start_time = time.time()
+    # set number of pictures
 for i in range(1, 2):
+    # save location and name
     file_path = '/home/Camera/Pictures'
     r = picam2.capture_request(file_path)
     r.save("main", f"Cam1{date}{i}.jpg")
