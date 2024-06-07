@@ -5,7 +5,7 @@ from picamera2 import Picamera2
 from libcamera import controls
 
 # Set variables and camera configuration
-date = time.strft
+date = time.strftime("%d%m%Y")
 picam2 = Picamera2()
 config = picam2.create_still_configuration({"size":(4056, 3040)})
 picam2.configure(config)
