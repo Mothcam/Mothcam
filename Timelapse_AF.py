@@ -25,11 +25,11 @@ def read_config(file_path):
 
 def main():
 	# Take the number of photo's out of the config file. When failed 3 pictures will be taken
-	config_file = '/home/camera/Camera/mothconfig.json'
+	config_file = '/home/camera/Mothcam/mothconfig.json'
 	config = read_config(config_file)
 	nrfotos = config.get("nrfotos", 3)
 	# Take the camera number out of the config file. When failed the number will be 00
-	file_path = config.get("file_path",'/home/camera/Camera/Pictures')
+	file_path = config.get("file_path",'/home/camera/Mothcam/Pictures')
 	cam_number = config.get("cam_number","00")
 	
 #Set variables
@@ -49,12 +49,11 @@ def main():
 	start_time = time.time()
 
 	for i in range(1, nrfotos + 1):
-    		r = picam2.capture_request(file_path)
+		r = picam2.capture_request(file_path)
 		#set filename as
-    		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i}.jpg")
-    		r.release()
-    		print(f"Captured image {i} at {time.time() - start_time:.2f}s")
-    		time.sleep(1)
+		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i}.jpg")
+		r.release()
+		time.sleep(1)
 
 	picam2.stop()
 
