@@ -33,7 +33,7 @@ def main():
 	cam_number = config.get("cam_number","00")
 	
 #Set variables
-	date = time.strftime("%d%m%Y")
+	date = time.strftime("%Y%m%d")
 	picam2 = Picamera2()
 	config = picam2.create_still_configuration({"size":(4056, 3040)})
 	picam2.configure(config)
@@ -51,7 +51,7 @@ def main():
 	for i in range(1, nrfotos + 1):
 		r = picam2.capture_request(file_path)
 		#set filename as
-		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i}.jpg")
+		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
 		r.release()
 		time.sleep(1)
 
