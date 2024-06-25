@@ -11,8 +11,8 @@ Mothcam is repository with the scripts and config files meant for turning the [L
 - Keyboard (& mouse***)**
 
 * = When using SSH
-+ = Without using SSH
-# = When using an OS with a desktop
+** = Without using SSH
+*** = When using an OS with a desktop
 ```
 [PuTTY](https://www.putty.org/) install link  
 ## Noob Installation Guide
