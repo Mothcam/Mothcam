@@ -7,11 +7,11 @@ Mothcam is repository with the scripts and config files meant for turning the [L
 - Ribbon cable
 - Computer with [PuTTY](https://www.putty.org/) installed*
 - Monitor**
-- Keyboard (&***)**
+- Keyboard (& mouse+)#
 
 * = When using SSH
-** = Without using SSH
-*** = When using an OS with a desktop
++ = Without using SSH
+# = When using an OS with a desktop
   
 ## installation Guide
 The Mothcam is programmed with the Raspberry pi OS Lite (32/64 bit) Debian Bookworm. Therefore, it is recommended to use the same OS. 
