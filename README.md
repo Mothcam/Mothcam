@@ -2,16 +2,18 @@
 Mothcam is repository with the scripts and config files meant for turning the [LedEmmer](https://www.vlinderstichting.nl/wat-wij-doen/meetnetten/meetnet-nachtvlinders/ledemmers/) into a Mothcam camera trap for monitoring moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4 and a Raspberry Pi Zero W.
 
 ## Required equipment
-- Raspberry Pi module
+````
+- Raspberry Pi module 
 - Picamera 3
 - Ribbon cable
 - Computer with [PuTTY](https://www.putty.org/) installed*
-- Monitor**
+- Monitor**  
 - Keyboard (& mouse+)#
 
 * = When using SSH
 + = Without using SSH
 # = When using an OS with a desktop
+````
   
 ## installation Guide
 The Mothcam is programmed with the Raspberry pi OS Lite (32/64 bit) Debian Bookworm. Therefore, it is recommended to use the same OS. 
