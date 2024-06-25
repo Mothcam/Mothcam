@@ -1,11 +1,19 @@
 #!/usr/bin/python3
 #import required modules
 import time
+import RPi.GPIO as GPIO
 import json
 import sys
 
 from picamera2 import Picamera2
 from libcamera import controls
+
+#uses the physical pin numbers on the GPIO header of the Raspberry Pi board itself.
+##GPIO.setmode(GPIO.BOARD)
+#The GPIO pin [7] is used for output
+##GPIO.setup(7, GPIO.OUT)
+
+
 #Read the config file
 def read_config(file_path):
 	print("File_path:", file_path)
@@ -49,9 +57,14 @@ def main():
 	start_time = time.time()
 
 	for i in range(1, nrfotos + 1):
+		#Flash
+		##GPIO.output(7, GPIO.HIGH)
+		#Make pictures
 		r = picam2.capture_request(file_path)
 		#set filename as
 		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
+		#Turn light off again (LOW=off)
+		##GPIO.output(7, GPIO.LOW)
 		r.release()
 		time.sleep(1)
 
