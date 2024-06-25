@@ -57,7 +57,7 @@ to start editing the config file. In the config file, replace "<address>127.0.0.
 ```
 <address>0.0.0.0:8384</address>
 ```
-[!WARNING]
+> [!WARNING]
 > Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page.
 
 Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the pi by typing the following in your browser
@@ -70,6 +70,6 @@ Once the devices have added eachother it's possible to share folders with eachot
 ~/Mothcam/Pictures/
 ```
 Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
-[!WARNING]
+> [!WARNING]
 > The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. So, yes, it works similar to a shared folder in OneDrive.
 
