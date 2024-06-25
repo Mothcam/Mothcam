@@ -21,7 +21,7 @@ The Mothcam is programmed with the Raspberry pi OS Lite (32/64 bit) Debian Bookw
 Before downloading the OS onto the micro-SD card make the SSH is turned on and the Pi has the access to the internet by filling in the field for Wi-Fi network name and password. It is recommended to connect enter Wi-Fi connection information of source in which the connected devices can viewed, such as a personal hotspot or router, since it can be used to figure out the IP-address. It's also imporant to remember the Hostname and password which can be set before installing the OS. After installing the OS, the micro-SD can by put into the Pi and the Pi can now be used.
 
 
-# About SSH
+<!-- # About SSH -->
 
 # Download Repositories
 Once the has started up for the first time the following command need to ran to install the most recent versions of the libraries:
