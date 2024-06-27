@@ -35,7 +35,7 @@ git clone https://github.com/Mothcam/Mothcam.git
 sudo apt install -y python3-picamera2
 ```
 
-Lastly, it is recommended to install syncthing to synchronise the Pictures folder to a personal database. The following steps can be followed to install syncthing:
+Lastly, it is recommended to install syncthing to synchronise the Pictures folder to a personal database. Here are the instructions to install syncthing:
 
 ```
 sudo apt install syncthing
