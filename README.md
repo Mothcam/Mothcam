@@ -7,6 +7,7 @@ Mothcam is repository with the scripts and config files designed to transform th
 - Raspberry Pi 
 - Picamera 3
 - Ribbon cable
+- (LISIPAROI) halo LEDs
 - Computer with PuTTY*
 - Monitor**  
 - Keyboard (& mouse***)**
