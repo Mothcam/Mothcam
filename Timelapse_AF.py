@@ -30,7 +30,6 @@ def read_config(file_path):
 		print(f"Error reading config file: {e}")
 		sys.exit(1)
 	return config
-
 def main():
 	# Take the number of photo's out of the config file. When failed 3 pictures will be taken
 	config_file = '/home/camera/Mothcam/mothconfig.json'
@@ -47,28 +46,25 @@ def main():
 	picam2.configure(config)
 	picam2.options["quality"] = 95
 	picam2.start()
-
 	# Give time for Aec and Awb to settle, before disabling them and wait for those settings to take effect
 	time.sleep(1)
 	picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
-
 	#Instructions to the Picamera to take pictures
 	time.sleep(2)
 	start_time = time.time()
 
 	for i in range(1, nrfotos + 1):
 		#Flash
-		GPIO.output(7, GPIO.HIGH)
+		##GPIO.output(7, GPIO.HIGH)
 		#Make pictures
-		#r = picam2.capture_request(file_path)
+		r = picam2.capture_request(file_path)
 		#set filename as
-		#r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
-		Turn light off again (LOW=off)
+		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
+		#Turn light off again (LOW=off)
 		##GPIO.output(7, GPIO.LOW)
 		r.release()
 		time.sleep(1)
 
 	picam2.stop()
-
 if __name__== "__main__":
         main()
