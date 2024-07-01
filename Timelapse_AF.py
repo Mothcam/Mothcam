@@ -58,12 +58,12 @@ def main():
 
 	for i in range(1, nrfotos + 1):
 		#Flash
-		##GPIO.output(7, GPIO.HIGH)
+		GPIO.output(7, GPIO.HIGH)
 		#Make pictures
-		r = picam2.capture_request(file_path)
+		#r = picam2.capture_request(file_path)
 		#set filename as
-		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
-		#Turn light off again (LOW=off)
+		#r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
+		Turn light off again (LOW=off)
 		##GPIO.output(7, GPIO.LOW)
 		r.release()
 		time.sleep(1)
