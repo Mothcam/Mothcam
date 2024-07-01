@@ -106,7 +106,27 @@ def check_rpi_zero():
         error = 1                                     # error is set to 1
         exit_func(error)                              # exit function is caleld
     return rpi_zero
-  
+
+    
+
+
+
+def check_screen_presence():
+    """ Checks if a display is connected, eventually via VNC; This is not the (SPI) display at Raspberry Pi."""
+    
+    import os                                         # os library is imported
+    
+    if 'DISPLAY' in os.environ:                       # case the environment variable DISPLAY is set to 1 (there is a display)
+        if debug:                                     # case debug variable is set True (on __main__ or via argument)
+            print('Display function is availbale')  # feedback is printed to the terminal
+        return True                                   # function returns True, meaning there is a screen connected
+    else:                                             # case the environment variable DISPLAY is set to 0 (there is NOT a display)
+        if debug:                                     # case debug variable is set True (on __main__ or via argument)
+            print('Display function is not availbale') # feedback is printed to the terminal
+        return False                                  # function returns False, meaning there is NOT a screen connected
+
+
+
 def setup():
     """ Reads settings from the settings.txt file and add them in a dictionary.
         Sets the camera, and the display
