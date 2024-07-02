@@ -68,4 +68,8 @@ Once the devices have added eachother it's possible to share folders with eachot
 Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
 > [!WARNING]
 > The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. So, yes, it works similar to a shared folder in OneDrive.
+```
+
+<!-- LED attachment instructions -->
+
 
