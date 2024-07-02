@@ -73,14 +73,13 @@ Once the devices have added each other it's possible to share folders with each 
 Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
 > [!WARNING]
 > The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. Working similarly to a shared OneDrive folder.
-```
 
-<!-- # Editing the settings of the timelapse script
+## Editing the settings of the timelapse script
 To edit the settings of the timelapse script in an easy manner a config file can be used. This config file can be edited using the following commands
-
+```
 cd Mothcam
 nano mothconfig.json
-<!--```
+```
 Within this file the following settings can be found and adjusted:
 -  GPIO: this setting can be set to True or False depending on whether the GPIO pins on the Pi are being used (True) or not (False).
 -  start_hhmm: determines the start time of the script. E.g. the script should start at 9.23 AM, this setting will then be set to 09:23.
@@ -88,8 +87,7 @@ Within this file the following settings can be found and adjusted:
 - camera_w and camera_h: these settings are used to set the size of the pictures taken. E.g. a resolution of 3040x4056 would be set by adjusting the camera_w setting to 3040 and the camera_h setting to 4056.
 - autofocus: this setting can be set to True or False depensing on whether you want autofocus turned on (True) or off (False)
 - focus_dist_m: if autofocus is turned off this setting determines the focus distance the camera will have in meters. E.g. if the camera should focus on a 5 cm distance this setting will be set to 0.05.
-``` -->
-```
+
 ## Running the timelapse script
 To run the timelapse script manually the following sequence of commands can be used
 ```
@@ -111,7 +109,6 @@ crontab -l
 It can be useful to have the crontab write an automatic logfile in case any errors occur. To do this enter the following line directly behind the crontab
 ```
 >> /path/to/logfile.log 2>&1
-#E.g.:
-23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
+#E.g.: 23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
 
 
