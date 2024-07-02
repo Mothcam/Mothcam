@@ -87,6 +87,7 @@ Within this file the following settings can be found and adjusted:
 - camera_w and camera_h: these settings are used to set the size of the pictures taken. E.g. a resolution of 3040x4056 would be set by adjusting the camera_w setting to 3040 and the camera_h setting to 4056.
 - autofocus: this setting can be set to True or False depensing on whether you want autofocus turned on (True) or off (False)
 - focus_dist_m: if autofocus is turned off this setting determines the focus distance the camera will have in meters. E.g. if the camera should focus on a 5 cm distance this setting will be set to 0.05.
+- interval: this sets the interval between pictures in seconds. The minimum time needed is around 2 seconds.
 
 ## Running the timelapse script
 To run the timelapse script manually the following sequence of commands can be used
