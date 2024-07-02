@@ -28,7 +28,7 @@ hostname -I
 If you are using SSH the Pi's IP can be found on the router of the Wi-Fi network that was chosen in the advanced options of the Raspberry Pi Imager or when using a hotspot the IP can be found in the settings of the hotspot. The name of the pi will be the hostname you set in the Raspberry Pi Imager. 
 
 ## Downloading the required repositories
-Once the Pi has been started for the first time the following command needs to be run to install the most recent versions of all libraries on the Pi:
+Once the Pi has been started for the first time the following command needs to be run to install the most recent versions of all libraries on the Pi
 ```
 sudo apt update
 sudo apt upgrade
@@ -88,6 +88,7 @@ Within this file the following settings can be found and adjusted:
 - autofocus: this setting can be set to True or False depensing on whether you want autofocus turned on (True) or off (False)
 - focus_dist_m: if autofocus is turned off this setting determines the focus distance the camera will have in meters. E.g. if the camera should focus on a 5 cm distance this setting will be set to 0.05.
 ``` -->
+```
 ```
 # Running the timelapse script
 To run the timelapse script manually the following sequence of commands can be used
