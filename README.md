@@ -26,8 +26,7 @@ How to use SSH to access a Raspberry Pi differs depending on your operating syst
 hostname -I
 ```
 If you are using SSH the Pi's IP can be found on the router of the Wi-Fi network that was chosen in the advanced options of the Raspberry Pi Imager or when using a hotspot the IP can be found in the settings of the hotspot. The name of the pi will be the hostname you set in the Raspberry Pi Imager. 
-```
-```
+
 # Download Repositories
 Once the Pi has been started for the first time the following command needs to be run to install the most recent versions of all libraries on the Pi:
 ```
