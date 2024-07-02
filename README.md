@@ -1,46 +1,52 @@
 # Mothcam
-Mothcam is repository with the scripts and config files designed to transform the [LedEmmer](https://www.vlinderstichting.nl/wat-wij-doen/meetnetten/meetnet-nachtvlinders/ledemmers/) into a Mothcam camera trap, enabling the fully automated monitoring of moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4 and a Raspberry Pi Zero W. This README will assume that the user will have absolutely zero experience with Linux and Raspberri Pi. therefore this README will provide step-by-step instructions to guide any user through setting up the Mothcam.
+Mothcam is a repository with the scripts and config files designed to transform the [LedEmmer](https://www.vlinderstichting.nl/wat-wij-doen/meetnetten/meetnet-nachtvlinders/ledemmers/) into a Mothcam camera trap, enabling fully automated monitoring of moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4 and a Raspberry Pi Zero W. This README will assume that the user has zero experience with Linux and Raspberry Pi. Therefor this README will provide step-by-step instructions to guide any user through setting up the Mothcam.
 
 
 ## Required equipment
 ```
 - Raspberry Pi 
-- Picamera 3
-- Ribbon cable
+- Picamera module 3
+- Ribbon cable*
 - (LISIPAROI) halo LEDs
-- Computer with PuTTY*
-- Monitor**  
-- Keyboard (& mouse***)**
+- Computer/laptop**
+- Monitor*** 
+- Keyboard*** (& mouse****)
 
-* = When using SSH
-** = Without using SSH
-*** = When using an OS with a desktop
+* = for a Raspberry Pi 4 a 22 pin to 22 pin cable is needed. For a Raspberry Pi zero W a 22 to 15 pin cable is needed.
+** = When using SSH
+*** = Without using SSH
+**** = When using an OS with a desktop
+```  
+## Installation guide
+The Mothcam is programmed to run on Raspberry Pi OS Lite (32/64 bit) Debian Bookworm, which is recommended for optimal performance. This can be downloaded onto a micro-SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Before downloading the OS onto the micro-SD card, ensure that SSH is enabled and configure the Raspberry Pi for internet access by entering the Wi-Fi network name (SSID) and password by editing the "advanced options" in the Raspberry Pi Imager program. It is advisable to use a Wi-Fi network that allows you to monitor connected devices, such as a personal hotspot or router, to easily determine the Pi's IP address. Additionally, remember to set a hostname and password during the configuration process before installing the OS. Once the OS is installed, insert the micro-SD card into the Raspberry Pi and power it up to begin using the Pi.
+
+# SSH instructions
+How to use SSH to access a Raspberry Pi differs depending on your operating system [this tutorial](https://www.onlogic.com/blog/how-to-ssh-into-raspberry-pi/) details the steps for Windows, Mac and Ubuntu. All methods require the IP of the Pi, if you are working on a monitor using an HDMI cable the IP can be found using the following command
 ```
-[PuTTY](https://www.putty.org/) install link  
-## Noob Installation Guide
-The Mothcam is programmed to run on Raspberry Pi OS Lite (32/64 bit) Debian Bookworm, which is recommended for optimal performance. Before downloading the OS onto the micro-SD card, ensure that SSH is enabled and configure the Raspberry Pi for internet access by entering the Wi-Fi network name (SSID) and password. It is advisable to use a Wi-Fi network that allows you to monitor connected devices, such as a personal hotspot or router, to easily determine the Pi's IP address. Additionally, remember to set a hostname and password during the configuration process before installing the OS. Once the OS is installed, insert the micro-SD card into the Raspberry Pi and power it up to begin using the Pi.
-
-<!-- # About SSH -->
-
+hostname -I
+```
+If you are using SSH the Pi's IP can be found on the router of the Wi-Fi network that was chosen in the advanced options of the Raspberry Pi Imager or when using a hotspot the IP can be found in the settings of the hotspot. The name of the pi will be the hostname you set in the Raspberry Pi Imager. 
+```
+```
 # Download Repositories
-Once the has started up for the first time the following command need to ran to install the most recent versions of the libraries:
+Once the Pi has been started for the first time the following command needs to be run to install the most recent versions of all libraries on the Pi:
 ```
 sudo apt update
 sudo apt upgrade
 ```
-To install the Mothcam repository and other required repositories the following command has to be used:
+To install the Mothcam and Picamera2 repository command can be used
 ```
 sudo apt install git
 git clone https://github.com/Mothcam/Mothcam.git
 sudo apt install -y python3-picamera2
 ```
 
-Lastly, it is recommended to install syncthing to synchronise the Pictures folder to a personal database. Here are the instructions to install syncthing:
+Lastly, it is recommended to install syncthing to synchronise the Pictures folder to a personal database. Here are the instructions to install syncthing
 
 ```
 sudo apt install syncthing
 ```
-run syncthing by typing:
+run syncthing by typing
 ```
 syncthing
 ```
@@ -56,25 +62,25 @@ to start editing the config file. In the config file, replace "< address >127.0.
 > [!WARNING]
 > Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page.
 
-Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the pi by typing the following in your browser
+Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the Pi by typing the following into your browser
 ```
 [PI-IP-address]:8384
 ```
-go to add external device and enter the device ID of the other device, this ID can be found in the actions menu on the top right of the page.
-Once the devices have added eachother it's possible to share folders with eachother. To share a folder go to "Add folder" on the syncthing page of the pi. for the Map locaiton enter 
+go to "add external device" and enter the device ID of the other device, this ID can be found in the actions menu on the top right of the page. To access syncthing on your device install [Syncthing](https://syncthing.net/downloads/) and open the program on your device.
+Once the devices have added each other it's possible to share folders with each other. To share a folder go to "Add folder" on the syncthing page of the Pi. for the Map location enter 
 ```
 ~/Mothcam/Pictures/
 ```
 Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
 > [!WARNING]
-> The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. So, yes, it works similar to a shared folder in OneDrive.
+> The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. Working similarly to a shared OneDrive folder.
 
-# Editing the settings of the timelapse script
+<!--# Editing the settings of the timelapse script
 To edit the settings of the timelapse script in an easy manner a config file can be used. This config file can be edited using the following commands
 ```
 cd Mothcam
 nano mothconfig.json
-<!-- ```
+```
 Within this file the following settings can be found and adjusted:
 -  GPIO: this setting can be set to True or False depending on whether the GPIO pins on the Pi are being used (True) or not (False).
 -  start_hhmm: determines the start time of the script. E.g. the script should start at 9.23 AM, this setting will then be set to 09:23.
