@@ -108,6 +108,4 @@ It can be useful to have the crontab write an automatic logfile in case any erro
 #E.g.:
 23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
 
-<!-- # LED set up -->
-
 
