@@ -10,6 +10,6 @@
         "camera_w":"4056",
         "camera_h":"3040",
 	"file_path": "/home/camera/Mothcam/Pictures",
-        "Date": "%Y%m%d"
+        "date": "%Y%m%d"
 
 }
