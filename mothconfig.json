@@ -1,15 +1,17 @@
-{ 
-	"nrfotos": 15000,
-	"cam_number": "00",
-	"start_hhmm": "22 00",
+{
+        "nrfotos": 15000,
+        "file_path": "/home/camera/Mothcam/Pictures",
+        "cam_number": "00",
+        "autofocus": "True",
+        "focus_dist_m": "0.1",
+        "start_hhmm": "22 00",
         "end_hhmm": "06 00",
-	"autofocus": "T0",
-	"focus_dist_m": "0.1",
-	"GPIO_pin":"7",
-        "quality":"95",
-        "camera_w":"4056",
-        "camera_h":"3040",
-	"file_path": "/home/camera/Mothcam/Pictures",
+        "GPIO_pin": 7,
+        "quality":95,
+        "camera_w":4052,
+        "camera_h":3040,
+        "autofocus":"1",
+        "focus_dist_m":"0.1",
         "date": "%Y%m%d"
-
 }
+
