@@ -10,19 +10,9 @@ from libcamera import controls
 
 
 def read_config(file_path):
-        print("File_path:", file_path)
         try:
                 with open(file_path, 'r') as file:
                         config =json.load(file)
-        except FileNotFoundError:
-                print(f"Error: The file {file_path} was not found")
-                sys.exit(1)
-        except json.JSONDecodeError:
-                print(f":Error: The {file_path} is not a valid JSON file")
-                sys.exit(1)
-        except Exception as e:
-                print(f"Error reading config file: {e}")
-                sys.exit(1)
         return config
 def main():
         picam2 = Picamera2()
@@ -32,20 +22,19 @@ def main():
         #get the settings from the config file
         nrfotos = config.get("nrfotos", 3)
         cam_number = config.get("cam_number",0)
-        start_hhmm = config.get("start_hhmm", "22 00")
-        end_hhmm = config.get("end_hhmm", "06 00")
+        start_time = config.get("start_hhmm", "22 00")
+        stop_time = config.get("end_hhmm", "06 00")
         autofocus = config.get("autofocus",0)
         focus_dist_m = config.get("focus_dist_m", 0.1)
         GPIO_pin = config.get("GPIO_pin",7)
         quality = config.get("quality",95)
         camera_w = config.get("camera_w", 4056)
-        camera_h = config.get("camera_w",3040)
+        camera_h = config.get("camera_h",3040)
         file_path = config.get("file_path", '/home/camera/Mothcam/Pictures')
         colour_space = config.get("colour")
         date = config.get("date", "%Y%m%d")
-	        date = time.strftime(date)
-
-
+	date = time.strftime(date)
+	#set configuration
         config = picam2.create_still_configuration({"size": (camera_w, camera_h)})
         picam2.configure(config)
         picam2.options["quality"]= quality
@@ -63,7 +52,7 @@ def main():
         picam2.configure(config)
         picam2.start()
         time.sleep(1)
-
+	#loop to take picture
         for i in range(1, nrfotos + 1):
                 #Flash
                 GPIO.output(GPIO_pin, 1)
@@ -79,7 +68,7 @@ def main():
                 print("OFF")
                 r.release()
                 time.sleep(0.1)
-
+		#add stop_time 
         picam2.stop()
 if __name__== "__main__":
         main()
