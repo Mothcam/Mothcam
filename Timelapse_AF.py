@@ -10,10 +10,9 @@ from libcamera import controls
 
 
 def read_config(file_path):
-        try:
-                with open(file_path, 'r') as file:
-                        config =json.load(file)
-        return config
+	with open(file_path, 'r') as file:
+		config =json.load(file)
+	return config
 def main():
         picam2 = Picamera2()
         config_file = '/home/camera/Mothcam/mothconfig.json'
