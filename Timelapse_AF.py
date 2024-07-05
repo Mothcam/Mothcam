@@ -31,7 +31,6 @@ def main():
         camera_w = config.get("camera_w", 4056)
         camera_h = config.get("camera_h",3040)
         file_path = config.get("file_path", '/home/camera/Mothcam/Pictures')
-        colour_space = config.get("colour")
         date = config.get("date", "%Y%m%d")
 	date = time.strftime(date)
 	#set configuration
