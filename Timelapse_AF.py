@@ -10,14 +10,14 @@ from libcamera import controls
 from datetime import datetime, timedelta
 
 def to_bool(value):
-    """ Converts argument to boolean. Raises exception for invalid formats
+	""" Converts argument to boolean. Raises exception for invalid formats
         Possible True  values: 1, True, true, "1", "True", "yes", "y", "t"
         Possible False values: 0, False, false, None, [], {}, "", "0", "False", "no", "n", ">
-    """
+	"""
 
 	if str(value).lower() in ("yes", "y", "true",  "t", "1"): # case lowercase value string >
 		return True                                   # True is returned
-	elif str(value).lower() in ("no",  "n", "false", "f", "0", "0.0", "", "none", "[]", "{}">
+	elif str(value).lower() in ("no",  "n", "false", "f", "0", "0.0", "", "none", "[]", "{}"): 
 		return False                                  # False is returned
 	print("Issue with settings value:", value)      # case if and elif aren't sattisfied
 	raise Exception                                   # exception is raised
@@ -48,7 +48,7 @@ def settings(config):
 
 	#auto focus settings
 	if autofocus:
-		picam2.set_controls({"AfMode": controls.AfModeEnum.Auto})
+		picam2.set_controls({"AfMode": controls.AfModeEnum.Auto: focus_dist})
 	else:
 		focus_dist = 1 / focus_dist_m if focus_dist_m > 0 else 1
 		picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": f>
@@ -68,7 +68,7 @@ def main():
 	picam2, cam_number, file_path, date, GPIO_pin, end_time = settings(config)
 
         #loop to take picture
-        i = 1
+	i = 1
 	while True:
 		if datetime.now().strftime("%H:%M")== end_time:
 			break
