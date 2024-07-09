@@ -48,10 +48,10 @@ def settings(config):
 
 	#auto focus settings
 	if autofocus:
-		picam2.set_controls({"AfMode": controls.AfModeEnum.Auto: focus_dist})
+		picam2.set_controls({"AfMode": controls.AfModeEnum.Auto})
 	else:
 		focus_dist = 1 / focus_dist_m if focus_dist_m > 0 else 1
-		picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": f>
+		picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": focus_dist})
 	# Set up GPIO
 	GPIO.setwarnings(False)
 	GPIO.setmode(GPIO.BOARD)
@@ -81,7 +81,7 @@ def main():
 		r.save("main", f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg")
 		#print(time.strftime("%S"))
 		#Turn light off again (LOW=off)
-		GPIO.output(GPIO_pin, 0_
+		GPIO.output(GPIO_pin, 0)
 		r.release()
 		i = i + 1
 	picam2.stop()
