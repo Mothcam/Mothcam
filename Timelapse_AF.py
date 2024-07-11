@@ -29,6 +29,7 @@ def read_config(file_path):
 
 def settings(config):
 	picam2 = Picamera2()
+	nrfotos = config.get("nrfotos, 3")
 	cam_number = config.get("cam_number",0)
 	end_time = config.get("end_time", "06:00")
 	autofocus = config.get("autofocus",1)
@@ -68,6 +69,7 @@ def main():
 	picam2, cam_number, file_path, date, GPIO_pin, end_time = settings(config)
 
         #loop to take picture
+	#for i in range (1, nrfotos, +1)
 	i = 1
 	while True:
 		if datetime.now().strftime("%H:%M")== end_time:
