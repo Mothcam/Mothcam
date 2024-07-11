@@ -29,7 +29,7 @@ def read_config(file_path):
 
 def settings(config):
 	picam2 = Picamera2()
-	nrfotos = config.get("nrfotos, 3")
+	nrfotos = config.get("nrfotos, 3)
 	cam_number = config.get("cam_number",0)
 	end_time = config.get("end_time", "06:00")
 	autofocus = config.get("autofocus",1)
@@ -61,7 +61,7 @@ def settings(config):
 	picam2.configure(resolution)
 	picam2.start()
 	time.sleep(1)
-	return  picam2, cam_number, file_path, date, GPIO_pin, end_time
+	return  picam2, cam_number, file_path, date, GPIO_pin, end_time, nrfotos
 
 def main():
 	config_file = '/home/camera/Mothcam/mothconfig.json'
