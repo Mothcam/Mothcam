@@ -66,7 +66,7 @@ def settings(config):
 def main():
 	config_file = '/home/camera/Mothcam/mothconfig.json'
 	config = read_config(config_file)
-	picam2, cam_number, file_path, date, GPIO_pin, end_time = settings(config)
+	picam2, nrfotos, cam_number, file_path, date, GPIO_pin, end_time = settings(config)
 
         #loop to take picture
 	#for i in range (1, nrfotos, +1)
