@@ -59,7 +59,12 @@ to start editing the config file. In the config file, replace "< address >127.0.
 <address>0.0.0.0:8384</address>
 ```
 > [!WARNING]
-> Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page.
+> Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page when syncthing is running on the pi. You can have syncthing running all the time by using the following commands (replace "user" with the username)
+
+````
+sudo systemctl enable syncthing@user
+sudo systemctl start syncthing@user
+````
 
 Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the Pi by typing the following into your browser
 ```
