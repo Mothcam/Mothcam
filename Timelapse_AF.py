@@ -29,7 +29,7 @@ def read_config(file_path):
 
 def settings(config):
 	picam2 = Picamera2()
-	nrfotos = config.get("nrfotos, 3)
+	nrfotos = config.get("nrfotos", 3)
 	cam_number = config.get("cam_number",0)
 	end_time = config.get("end_time", "06:00")
 	autofocus = config.get("autofocus",1)
