@@ -113,7 +113,7 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 	prev_image = None
 	while True:
 		try:
-			image_data = raw_image_queue.get(timeout=60)  # Add timeout to prevent infinite waiting
+			image_data = raw_image_queue.get()
 			if image_data is None:
 				processed_image_queue.put(None)
 				break
