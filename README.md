@@ -38,6 +38,8 @@ To install the Mothcam and Picamera2 repository command can be used
 sudo apt install git
 git clone https://github.com/Mothcam/Mothcam.git
 sudo apt install -y python3-picamera2
+sudo apt install python3-opencv
+sudo apt install python3-numpy
 ```
 
 Lastly, it is recommended to install syncthing to synchronise the Pictures folder to a personal database. Here are the instructions to install syncthing
