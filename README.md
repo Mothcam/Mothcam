@@ -49,7 +49,7 @@ run syncthing by typing
 ```
 syncthing
 ```
-After the initial run, use ctrl+c to kill to application. Type
+After the initial run, use ctrl+c to kill the application. Type
 ```
 cd ~
 nano ~/.config/syncthing/config.xml
