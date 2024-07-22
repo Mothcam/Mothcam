@@ -151,10 +151,12 @@ def save_image(processed_image_queue, file_path):
 
 			if should_save:
 				# time.sleep(6)
-				cv2.imwrite(f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg", current_image)
+				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
+				cv2.imwrite(f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg", RGB)
 				print(f"Image {i} saved at {time.strftime('%S')}")
 			if should_DEL:
-				cv2.imwrite(f"{'/home/camera/Mothcam/DEL'}/cam{cam_number}-{date}-{i:05}.jpg", current_image)
+				RBG = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
+				cv2.imwrite(f"{'/home/camera/Mothcam/DEL'}/cam{cam_number}-{date}-{i:05}.jpg", RGB)
 				print(f"Image {i} too similar. Saved in DEL at {time.strftime('%S')}")
 				print(f"Queue size: {processed_image_queue.qsize()}")
 		except Empty:
