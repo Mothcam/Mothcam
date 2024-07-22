@@ -54,12 +54,6 @@ def settings(config):
 		picam2.configure(resolution)
 		picam2.options["quality"] = quality
 
-		if autofocus:
-			picam2.set_controls({"AfMode": controls.AfModeEnum.Auto})
-		else:
-			focus_dist = 1 / focus_dist_m if focus_dist_m > 0 else float('inf')
-			picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosi> 
-
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(GPIO_pin, GPIO.OUT)
