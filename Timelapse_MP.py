@@ -154,7 +154,7 @@ def save_image(processed_image_queue, file_path):
 				cv2.imwrite(f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg", current_image)
 				print(f"Image {i} saved at {time.strftime('%S')}")
 			if should_DEL:
-				cv2.imwrite(f"{file_path}/DEL/cam{cam_number}-{date}-{i:05}.jpg", current_image)
+				cv2.imwrite(f"{'/home/camera/Mothcam/DEL'}/cam{cam_number}-{date}-{i:05}.jpg", current_image)
 				print(f"Image {i} too similar. Saved in DEL at {time.strftime('%S')}")
 				print(f"Queue size: {processed_image_queue.qsize()}")
 		except Empty:
