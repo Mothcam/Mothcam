@@ -17,7 +17,7 @@ def to_bool(value):
 		return value
 	if str(value).lower() in ("yes", "y", "true", "t", "1"):
 		return True
-	if str(value).lower() in ("no", "n", "false", "f", "0", "0.0", "", "none", "[]", "{}>
+	if str(value).lower() in ("no", "n", "false", "f", "0", "0.0", "", "none", "[]", "{}"):
 		return False
 	raise ValueError(f"Invalid boolean value: {value}")
 
@@ -50,7 +50,7 @@ def settings(config):
 		similarity = config.get("similarity_percentage", 99) / 100
 		loop_time = config.get("loop_time", 1)
 
-		resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)>
+		resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)})
 		picam2.configure(resolution)
 		picam2.options["quality"] = quality
 
@@ -58,7 +58,7 @@ def settings(config):
 			picam2.set_controls({"AfMode": controls.AfModeEnum.Auto})
 		else:
 			focus_dist = 1 / focus_dist_m if focus_dist_m > 0 else float('inf')
-			picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosi>
+			picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosi> 
 
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BOARD)
@@ -67,7 +67,10 @@ def settings(config):
 		picam2.start()
 		time.sleep(2)
 
-		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, >
+		os.makedirs(file_path, exist_ok=True)
+		os.makedirs(os.path.join('/home/camera/Mothcam', 'DEL'), exist_ok=True)
+					     
+		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time, autofocus
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
