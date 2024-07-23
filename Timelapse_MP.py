@@ -62,7 +62,7 @@ def settings(config):
 		os.makedirs(file_path, exist_ok=True)
 		os.makedirs(os.path.join('/home/camera/Mothcam', 'DEL'), exist_ok=True)
 					     
-		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time, autofocus
+		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
