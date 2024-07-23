@@ -85,7 +85,7 @@ def capture_and_queue(config, raw_image_queue):
 			if time_elapsed < flash_time:
 				time.sleep(flash_time - time_elapsed)
 
-			picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
+			picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous})
 
 			current_image = picam2.capture_array()
 			raw_image_queue.put((current_image, cam_number, date, i))
