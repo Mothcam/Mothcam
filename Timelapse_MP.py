@@ -38,8 +38,6 @@ def settings(config):
 		nrfotos = config.get("nrfotos", 10)
 		cam_number = config.get("cam_number", "00")
 		end_time = config.get("end_time", "06:00")
-		autofocus = to_bool(config.get("autofocus", True))
-		focus_dist_m = config.get("focus_dist_m", 0.1)
 		GPIO_pin = config.get("GPIO_pin", 7)
 		quality = config.get("quality", 95)
 		camera_w = config.get("camera_w", 4056)
@@ -74,9 +72,9 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
 	picam2 = None
 	try:
-		picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time, autofocus = settings(config)
+		picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time = settings(config)
 
-		i = 1
+		i = 0
 		flash_time = 1
 
 		while datetime.now().strftime("%H:%M") != end_time and i <= nrfotos:
@@ -86,6 +84,8 @@ def capture_and_queue(config, raw_image_queue):
 			time_elapsed = time.time() - loop_start
 			if time_elapsed < flash_time:
 				time.sleep(flash_time - time_elapsed)
+
+			picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous,"FrameRate": 1.0})
 
 			current_image = picam2.capture_array()
 			raw_image_queue.put((current_image, cam_number, date, i))
