@@ -43,11 +43,12 @@ def settings(config):
 		camera_w = config.get("camera_w", 4056)
 		camera_h = config.get("camera_h", 3040)
 		file_path = config.get("file_path", '/home/camera/Mothcam/Pictures')
+		dir_path = config.get("dir_path", '/home/camera/Mothcam')
 		date_format = config.get("date", "%Y%m%d")
 		date = time.strftime(date_format)
 		similarity = config.get("similarity_percentage", 99) / 100
 		loop_time = config.get("loop_time", 1)
-
+		
 		resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)})
 		picam2.configure(resolution)
 		picam2.options["quality"] = quality
@@ -77,7 +78,7 @@ def capture_and_queue(config, raw_image_queue):
 		i = 0
 		flash_time = 1
 
-		while datetime.now().strftime("%H:%M") != end_time and i <= nrfotos:
+		while datetime.now().strftime("%H:%M") != end_time or i <= nrfotos:
 			loop_start = time.time()
 
 			GPIO.output(GPIO_pin, GPIO.HIGH)
@@ -154,7 +155,7 @@ def save_image(processed_image_queue, file_path):
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
 				cv2.imwrite(f"{file_path}/cam{cam_number}-{date}-{i:05}.jpg", RGB)
 				print(f"Image {i} saved at {time.strftime('%S')}")
-			if should_DEL:
+			else:
 				RBG = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
 				cv2.imwrite(f"{'/home/camera/Mothcam/DEL'}/cam{cam_number}-{date}-{i:05}.jpg", RGB)
 				print(f"Image {i} too similar. Saved in DEL at {time.strftime('%S')}")
