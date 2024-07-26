@@ -78,7 +78,7 @@ def capture_and_queue(config, raw_image_queue):
 		i = 0
 		flash_time = 1
 
-		while datetime.now().strftime("%H:%M") != end_time or i <= nrfotos:
+		while datetime.now().strftime("%H:%M") != end_time and i <= nrfotos:
 			loop_start = time.time()
 
 			GPIO.output(GPIO_pin, GPIO.HIGH)
