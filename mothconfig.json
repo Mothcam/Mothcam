@@ -1,6 +1,6 @@
 {
         "end_time": "06:00",
-        "nrfotos": 10000,
+        "nrphotos": 10000,
         "quality": 95,
 
         "comment": "similarity percentage scales from 0-100. 0 = save all. 100 = delete all",
