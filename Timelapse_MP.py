@@ -35,7 +35,7 @@ def settings(config):
 	picam2 = None
 	try:
 		picam2 = Picamera2()
-		nrfotos = config.get("nrfotos", 10)
+		nrphotos = config.get("nrphotos", 10)
 		cam_number = config.get("cam_number", "00")
 		end_time = config.get("end_time", "06:00")
 		GPIO_pin = config.get("GPIO_pin", 7)
@@ -63,7 +63,7 @@ def settings(config):
 		os.makedirs(file_path, exist_ok=True)
 		os.makedirs(os.path.join('/home/camera/Mothcam', 'DEL'), exist_ok=True)
 					     
-		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time
+		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrphotos, loop_time
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
@@ -73,12 +73,12 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
 	picam2 = None
 	try:
-		picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrfotos, loop_time = settings(config)
+		picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrphotos, loop_time = settings(config)
 
 		i = 0
 		flash_time = 1
 
-		while datetime.now().strftime("%H:%M") != end_time and i <= nrfotos:
+		while datetime.now().strftime("%H:%M") != end_time and i <= nrphotos:
 			loop_start = time.time()
 
 			GPIO.output(GPIO_pin, GPIO.HIGH)
