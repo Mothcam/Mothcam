@@ -1,6 +1,9 @@
 # Mothcam
 Mothcam is a repository with the scripts and config files designed to transform the [LedEmmer](https://www.vlinderstichting.nl/wat-wij-doen/meetnetten/meetnet-nachtvlinders/ledemmers/) into a Mothcam camera trap, enabling fully automated monitoring of moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4 and a Raspberry Pi Zero W. This README will assume that the user has zero experience with Linux and Raspberry Pi. Therefor this README will provide step-by-step instructions to guide any user through setting up the Mothcam.
 
+#- what to do in imager / model os etc
+-
+-
 
 ## Required equipment
 ```
@@ -18,10 +21,14 @@ Mothcam is a repository with the scripts and config files designed to transform 
 **** = When using an OS with a desktop
 ```  
 ## OS installation guide
-The Mothcam is programmed to run on Raspberry Pi OS Lite (32/64 bit) Debian Bookworm, which is recommended for optimal performance. This can be downloaded onto a micro-SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Before downloading the OS onto the micro-SD card, ensure that SSH is enabled and configure the Raspberry Pi for internet access by entering the Wi-Fi network name (SSID) and password by editing the "advanced options" in the Raspberry Pi Imager program. It is advisable to use a Wi-Fi network that allows you to monitor connected devices, such as a personal hotspot or router, to easily determine the Pi's IP address. Additionally, remember to set a hostname and password during the configuration process before installing the OS. Once the OS is installed, insert the micro-SD card into the Raspberry Pi and power it up to begin using the Pi.
+The Mothcam is programmed to run on Raspberry Pi OS Lite (32/64 bit) Debian Bookworm""""in the "other"menu """", which is recommended for optimal performance. This can be downloaded onto a micro-SD card using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Before downloading the OS onto the micro-SD card, ensure that SSH is enabled and configure the Raspberry Pi for internet access by entering the Wi-Fi network name (SSID) and password by editing the "advanced options" in the Raspberry Pi Imager program. It is advisable to use a Wi-Fi network that allows you to monitor connected devices, such as a personal hotspot or router, to easily determine the Pi's IP address. Additionally, remember to set a hostname and password during the configuration process before installing the OS. Once the OS is installed, insert the micro-SD card into the Raspberry Pi and power it up to begin using the Pi.
+
+stappen toeveogen -> knop "aanpassen"
 
 ## SSH instructions
 How to use SSH to access a Raspberry Pi differs depending on your operating system, [this tutorial](https://www.onlogic.com/blog/how-to-ssh-into-raspberry-pi/) details the steps for Windows, Mac and Ubuntu. All methods require the IP of the Pi, if you are working on a monitor using an HDMI cable the IP can be found using the following command
+
+Volgende -> aanpassen -> services
 ```
 hostname -I
 ```
