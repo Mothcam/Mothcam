@@ -1,6 +1,6 @@
 {
         "end_time": "06:00",
-        "nrphotos": 10000,
+        "nrphotos": 10,
         "quality": 95,
 
         "comment": "similarity percentage scales from 0-100. 0 = save all. 100 = delete all",
@@ -14,5 +14,10 @@
         "cam_number": "00",
         "GPIO_pin": 7,
         "camera_w": 4052,
-        "camera_h": 3040
+        "camera_h": 3040,
+
+        "cpu_governor":"powersave",
+        "disable_hdmi": true,
+        "wifi_power_save": true,
+        "disable_usb": false
 }
