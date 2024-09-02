@@ -6,12 +6,6 @@ import json
 def set_cpu_governor(governor):
     os.system(f"echo {governor} | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor")
 
-def disable_hdmi():
-    os.system("/usr/bin/tvservice -o")
-
-def enable_hdmi():
-    os.system("/usr/bin/tvservice -p")
-
 def set_wifi_power_save(mode):
     os.system(f"sudo iw wlan0 set power_save {mode}")
 
@@ -42,11 +36,6 @@ def main():
     governor = settings.get('cpu_governor', 'powersave')
     set_cpu_governor(governor)
     print(f"CPU governor set to {governor}")
-
-    # Control HDMI
-    if settings.get('disable_hdmi', True):
-        disable_hdmi()
-        print("HDMI output disabled")
     
     # Set WiFi power saving
     if settings.get('wifi_power_save', True):
@@ -60,21 +49,6 @@ def main():
     if settings.get('disable_usb', True):
         control_usb_power("off")
         print("USB ports powered off")
-
-    # Monitor temperature
-    try:
-        while True:
-            temp = subprocess.check_output(["vcgencmd", "measure_temp"]).decode()
-            print(f"Current temperature: {temp.strip()}")
-            time.sleep(60)  # Check every minute
-    except KeyboardInterrupt:
-        print("\nExiting...")
-        # Restore settings
-        set_cpu_governor("ondemand")
-        enable_hdmi()
-        set_wifi_power_save("off")
-        control_usb_power("on")
-        print("Settings restored to default")
 
 if __name__ == "__main__":
     main()
