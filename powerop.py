@@ -40,15 +40,20 @@ def main():
     # Set WiFi power saving
     if settings.get('wifi_power_save', True):
         set_wifi_power_save("on")
-        if check_wifi_power_save():
-            print("WiFi power saving enabled successfully")
-        else:
-            print("Failed to enable WiFi power saving")
+    else:
+        set_wifi_power_save("off")
+    if check_wifi_power_save():
+        print("WiFi power saving enabled successfully")
+    else:
+        print("Did not enable WiFi power saving")
     
     # Control USB power
     if settings.get('disable_usb', True):
         control_usb_power("off")
         print("USB ports powered off")
+    else:
+        control_usb_power("on")
+        print("USB ports not powered off")
 
 if __name__ == "__main__":
     main()
