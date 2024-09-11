@@ -79,7 +79,6 @@ def capture_and_queue(config, raw_image_queue):
 
 			current_image = picam2.capture_array()
 			raw_image_queue.put((current_image, cam_number, date, i))
-			GPIO.output(GPIO_pin, GPIO.LOW)
 			i += 1
 			print(f"Captured image {i} at {time.strftime('%S')}. Queue size: {raw_image_queue.qsize()}")
 
