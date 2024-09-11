@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import time
-import RPi.GPIO as GPIO
 import json
 import cv2
 import os
@@ -38,14 +37,11 @@ def settings(config):
 		nrphotos = config.get("nrphotos", 10)
 		cam_number = config.get("cam_number", "00")
 		end_time = config.get("end_time", "06:00")
-		GPIO_pin = config.get("GPIO_pin", 7)
 		quality = config.get("quality", 95)
 		camera_w = config.get("camera_w", 4056)
 		camera_h = config.get("camera_h", 3040)
 		file_path = config.get("file_path", '/home/camera/Mothcam/Pictures')
 		dir_path = config.get("dir_path", '/home/camera/Mothcam')
-		date_format = config.get("date", "%Y%m%d")
-		date = time.strftime(date_format)
 		similarity = config.get("similarity_percentage", 99) / 100
 		loop_time = config.get("loop_time", 1)
 		
@@ -63,7 +59,7 @@ def settings(config):
 		os.makedirs(file_path, exist_ok=True)
 		os.makedirs(os.path.join('/home/camera/Mothcam', 'DEL'), exist_ok=True)
 					     
-		return picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrphotos, loop_time
+		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
@@ -73,19 +69,12 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
 	picam2 = None
 	try:
-		picam2, cam_number, file_path, date, GPIO_pin, end_time, similarity, nrphotos, loop_time = settings(config)
+		picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time = settings(config)
 
 		i = 0
-		flash_time = 1
-
+		
 		while datetime.now().strftime("%H:%M") != end_time and i <= nrphotos:
 			loop_start = time.time()
-
-			GPIO.output(GPIO_pin, GPIO.HIGH)
-			time_elapsed = time.time() - loop_start
-			if time_elapsed < flash_time:
-				time.sleep(flash_time - time_elapsed)
-
 			picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous})
 
 			current_image = picam2.capture_array()
@@ -104,7 +93,6 @@ def capture_and_queue(config, raw_image_queue):
 		if picam2:
 			picam2.stop()
 			picam2.close()
-		GPIO.cleanup()
 		raw_image_queue.put(None)
 
 def compare(raw_image_queue, processed_image_queue, similarity):
@@ -115,10 +103,9 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 			if image_data is None:
 				processed_image_queue.put(None)
 				break
+				
 			current_image, cam_number, date, i = image_data
-
 			should_save = True
-			should_DEL = False
 
 			if prev_image is not None:
 				gray1 = cv2.cvtColor(prev_image, cv2.COLOR_BGR2GRAY)
@@ -128,7 +115,6 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 
 				if diff_percentage <= (1 - similarity):
 					    should_save = False
-					    should_DEL = True
 
 				processed_image_queue.put((current_image, cam_number, date, i, should_save, should_DEL))
 
@@ -144,11 +130,11 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 def save_image(processed_image_queue, file_path):
 	while True:
 		try:
-			image_data = processed_image_queue.get(timeout=60)  # Add timeout to prevent infinite waiting
+			image_data = processed_image_queue.get()
 			if image_data is None:
 				break
 
-			current_image, cam_number, date, i, should_save, should_DEL = image_data
+			current_image, cam_number, i, should_save = image_data
 			date_str = datetime.now().strftime("%Y-%m-%d")
 			time_str = datetime.now().strftime("%H:%M:%S")
 
