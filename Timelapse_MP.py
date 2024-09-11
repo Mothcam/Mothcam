@@ -49,10 +49,6 @@ def settings(config):
 		picam2.configure(resolution)
 		picam2.options["quality"] = quality
 
-		GPIO.setwarnings(False)
-		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(GPIO_pin, GPIO.OUT)
-
 		picam2.start()
 		time.sleep(2)
 
@@ -78,7 +74,7 @@ def capture_and_queue(config, raw_image_queue):
 			picam2.set_controls({"AfMode":controls.AfModeEnum.Continuous})
 
 			current_image = picam2.capture_array()
-			raw_image_queue.put((current_image, cam_number, date, i))
+			raw_image_queue.put((current_image, cam_number, i))
 			i += 1
 			print(f"Captured image {i} at {time.strftime('%S')}. Queue size: {raw_image_queue.qsize()}")
 
@@ -103,7 +99,7 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 				processed_image_queue.put(None)
 				break
 				
-			current_image, cam_number, date, i = image_data
+			current_image, cam_number,  i = image_data
 			should_save = True
 
 			if prev_image is not None:
@@ -115,7 +111,7 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 				if diff_percentage <= (1 - similarity):
 					    should_save = False
 
-				processed_image_queue.put((current_image, cam_number, date, i, should_save, should_DEL))
+				processed_image_queue.put((current_image, cam_number, i, should_save))
 
 			if should_save:
 				prev_image = current_image
