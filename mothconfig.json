@@ -14,9 +14,5 @@
         "cam_number": "00",
         "GPIO_pin": 7,
         "camera_w": 4052,
-        "camera_h": 3040,
-
-        "cpu_governor":"powersave",
-        "wifi_power_save": true,
-        "disable_usb": false
+        "camera_h": 3040
 }
