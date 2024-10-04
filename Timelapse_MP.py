@@ -41,10 +41,11 @@ def settings(config):
 		camera_w = config.get("camera_w", 4056)
 		camera_h = config.get("camera_h", 3040)
 		file_path = config.get("file_path", '/home/camera/Mothcam/Pictures')
+		DEL_path = config.get("DEL_path",'/home/camera/Mothcam/DEL')
 		dir_path = config.get("dir_path", '/home/camera/Mothcam')
 		similarity = config.get("similarity_percentage", 99) / 100
 		loop_time = config.get("loop_time", 1)
-		
+		today_date = datetime.now().strftime("%Y-%m-%d")
 		resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)})
 		picam2.configure(resolution)
 		picam2.options["quality"] = quality
@@ -52,10 +53,10 @@ def settings(config):
 		picam2.start()
 		time.sleep(2)
 
-		os.makedirs(file_path, exist_ok=True)
-		os.makedirs(os.path.join('/home/camera/Mothcam', 'DEL'), exist_ok=True)
-					     
-		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time
+		save_pic = os.makedirs(os.path.join(file_path, today_date) exist_ok=True)
+		save_del = os.makedirs(os.path.join(DEL_path, today_date), exist_ok=True)
+				     
+		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time, save_pic, save_del
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
@@ -65,7 +66,7 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
 	picam2 = None
 	try:
-		picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time = settings(config)
+		picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time, save_pic, save_del, = settings(config)
 
 		i = 0
 		
@@ -122,7 +123,7 @@ def compare(raw_image_queue, processed_image_queue, similarity):
 			print("Timeout waiting for image in compare function")
 
 
-def save_image(processed_image_queue, file_path):
+def save_image(processed_image_queue, save_pic, save_del):
 	while True:
 		try:
 			image_data = processed_image_queue.get()
@@ -136,11 +137,11 @@ def save_image(processed_image_queue, file_path):
 			if should_save:
 				# time.sleep(6)
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
-				cv2.imwrite(f"{file_path}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
+				cv2.imwrite(f"{'save_pic'}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
 				print(f"Image {i} saved at {time.strftime('%S')}")
 			else:
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
-				cv2.imwrite(f"{'/home/camera/Mothcam/DEL'}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
+				cv2.imwrite(f"{'save_del'}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
 				print(f"Image {i} too similar. Saved in DEL at {time.strftime('%S')}")
 				print(f"Queue size: {processed_image_queue.qsize()}")
 		except Empty:
@@ -155,7 +156,7 @@ def main():
 
 		capture_process = mp.Process(target=capture_and_queue, args=(config, raw_image_queue))
 		compare_process = mp.Process(target=compare, args=(raw_image_queue, processed_image_queue, config['similarity_percentage'] / 100))
-		save_process = mp.Process(target=save_image, args=(processed_image_queue, config['file_path']))
+		save_process = mp.Process(target=save_image, args=(processed_image_queue, save_pic, save_del))
 
 		capture_process.start()
 		compare_process.start()
