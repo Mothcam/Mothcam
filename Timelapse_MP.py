@@ -53,7 +53,7 @@ def settings(config):
 		picam2.start()
 		time.sleep(2)
 
-		save_pic = os.makedirs(os.path.join(file_path, today_date) exist_ok=True)
+		save_pic = os.makedirs(os.path.join(file_path, today_date), exist_ok=True)
 		save_del = os.makedirs(os.path.join(DEL_path, today_date), exist_ok=True)
 				     
 		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time, save_pic, save_del
