@@ -139,7 +139,7 @@ def save_image(processed_image_queue, save_pic, save_del):
 			if should_save:
 				# time.sleep(6)
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
-				cv2.imwrite(f"{save_pic/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
+				cv2.imwrite(f"{save_pic}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
 				print(f"Image {i} saved at {time.strftime('%S')}")
 			else:
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
