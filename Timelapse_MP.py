@@ -53,9 +53,11 @@ def settings(config):
 		picam2.start()
 		time.sleep(2)
 
-		save_pic = os.makedirs(os.path.join(file_path, today_date), exist_ok=True)
-		save_del = os.makedirs(os.path.join(DEL_path, today_date), exist_ok=True)
-				     
+		save_pic = os.path.join(file_path, today_date)
+		save_del = os.path.join(DEL_path, today_date)
+		os.makedirs(save_pic, exist_ok = true)
+		os.makedirs(save_del, exist_ok = true)
+		
 		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time, save_pic, save_del
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
@@ -137,11 +139,11 @@ def save_image(processed_image_queue, save_pic, save_del):
 			if should_save:
 				# time.sleep(6)
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
-				cv2.imwrite(f"{'save_pic'}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
+				cv2.imwrite(f"{save_pic'/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
 				print(f"Image {i} saved at {time.strftime('%S')}")
 			else:
 				RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
-				cv2.imwrite(f"{'save_del'}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
+				cv2.imwrite(f"{save_del}/cam{cam_number}_{date_str}_{time_str}_{i:05}.jpg", RGB)
 				print(f"Image {i} too similar. Saved in DEL at {time.strftime('%S')}")
 				print(f"Queue size: {processed_image_queue.qsize()}")
 		except Empty:
@@ -156,6 +158,7 @@ def main():
 
 		capture_process = mp.Process(target=capture_and_queue, args=(config, raw_image_queue))
 		compare_process = mp.Process(target=compare, args=(raw_image_queue, processed_image_queue, config['similarity_percentage'] / 100))
+		_, _, _, _, _, _, _, save_pic, save_del = settings(config)
 		save_process = mp.Process(target=save_image, args=(processed_image_queue, save_pic, save_del))
 
 		capture_process.start()
