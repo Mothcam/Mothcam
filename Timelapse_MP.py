@@ -55,8 +55,8 @@ def settings(config):
 
 		save_pic = os.path.join(file_path, today_date)
 		save_del = os.path.join(DEL_path, today_date)
-		os.makedirs(save_pic, exist_ok = true)
-		os.makedirs(save_del, exist_ok = true)
+		os.makedirs(save_pic, exist_ok = True)
+		os.makedirs(save_del, exist_ok = True)
 		
 		return picam2, cam_number, file_path, end_time, similarity, nrphotos, loop_time, save_pic, save_del
 	except Exception as e:
