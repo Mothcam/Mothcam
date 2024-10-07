@@ -3,16 +3,10 @@
         "nrphotos": 10,
         "quality": 95,
 
-        "comment": "similarity percentage scales from 0-100. 0 = save all. 100 = delete all",
+        "comment": "similarity percentage scales from 0-100. 0 = delete all. 100 = save all",
         "similarity_percentage": 100,
 
-        
-        "loop_time_seconds": 0,
-        "file_path": "/home/camera/Mothcam/Pictures",
-        "date": "%Y%m%d",
-
         "cam_number": "00",
-        "GPIO_pin": 7,
         "camera_w": 4052,
         "camera_h": 3040
 }
