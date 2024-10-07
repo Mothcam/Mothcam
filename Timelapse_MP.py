@@ -75,7 +75,7 @@ def capture_and_queue(config, raw_image_queue):
 	try:
 		picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time = settings(config)
 		pic_number = 0
-		while datetime.now().strftime("%H:%M") != end_time # and pic_number <= nrphotos:
+		while datetime.now().strftime("%H:%M") != end_time: # and pic_number <= nrphotos:	#pay attention to the ":" when adding/ removing a hash
 			loop_start = time.time()
 			picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 			current_image = picam2.capture_array()
