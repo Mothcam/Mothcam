@@ -116,6 +116,10 @@ def compare(raw_image_queue, processed_image_queue, similarity):
                 gray1 = cv2.cvtColor(prev_image, cv2.COLOR_BGR2GRAY)
                 gray2 = cv2.cvtColor(current_image, cv2.COLOR_BGR2GRAY)
                 diff = cv2.absdiff(gray1, gray2)
+                #noise filter
+                noise_mask = diff <=4
+                diss[noise_mask] = 0
+                #calculate the difference between this and the last picture
                 diff_percentage = np.count_nonzero(diff) / diff.size
                 if diff_percentage <= (1 - similarity):
                     should_save = False
