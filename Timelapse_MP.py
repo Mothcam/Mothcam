@@ -118,7 +118,7 @@ def compare(raw_image_queue, processed_image_queue, similarity):
                 diff = cv2.absdiff(gray1, gray2)
                 #noise filter
                 noise_mask = diff <=4
-                diss[noise_mask] = 0
+                diff[noise_mask] = 0
                 #calculate the difference between this and the last picture
                 diff_percentage = np.count_nonzero(diff) / diff.size
                 if diff_percentage <= (1 - similarity):
