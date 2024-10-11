@@ -12,7 +12,7 @@ from datetime import datetime
 from queue import Empty
 
 def to_bool(value):
-    if isinstance(value, bool):
+    if isinstance(value, bool): 
         return value
     if str(value).lower() in ("yes", "y", "true", "t", "1"):
         return True
