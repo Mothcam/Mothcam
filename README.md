@@ -48,7 +48,7 @@ After the initial run, use ctrl+c to kill the application. Type
 cd ~
 nano ~/.config/syncthing/config.xml
 ```
-to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" with the following in row 46. With ctrl + / you can jump to this row. 
+to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" with the following in row 105. With ctrl + / you can jump to this row. 
 ```
 <address>0.0.0.0:8384</address>
 ```
