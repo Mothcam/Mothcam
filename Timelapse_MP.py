@@ -138,7 +138,7 @@ def save_image(processed_image_queue):
                 break
             current_image, cam_number, _, should_save, pictures_path, del_path = image_data
             
-            timestamp = datetime.now().strftime("%d-%m-%Y_%H;%M;%S")
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H;%M;%S")
             filename = f"cam{cam_number}_{timestamp}_{picture_number:05d}.jpg"
             
             RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
