@@ -103,47 +103,55 @@ def capture_and_queue(config, raw_image_queue):
         raw_image_queue.put(None)
 
 def compare(raw_image_queue, processed_image_queue, similarity):
-    history = []
-    MAX_HISTORY = 10  # Reduced from 100 to 10
-    
-    def calculate_average(history_images):
-        if not history_images:
-            return None
-        sum_image = np.zeros_like(history_images[0], dtype=np.float32)
-        for img in history_images:
-            sum_image += img
-        return (sum_image / len(history_images)).astype(np.uint8)
-    
+    prev_image = None
     while True:
         try:
             image_data = raw_image_queue.get()
             if image_data is None:
                 processed_image_queue.put(None)
                 break
-                
             current_image, cam_number, pic_number, pictures_path, del_path = image_data
-            current_gray = cv2.cvtColor(current_image, cv2.COLOR_BGR2GRAY)
-            should_save = True
-            
-            # Add current image to history and maintain history size
-            history.append(current_gray)
-            if len(history) > MAX_HISTORY:
-                history.pop(0)
-            
-            # Only compare once we have some history
-            if len(history) > 1:
-                avg_image = calculate_average(history[:-1])  # Average of all except current
-                if avg_image is not None:
-                    diff = cv2.absdiff(current_gray, avg_image)
-                    diff[diff <= 4] = 0  # Simplified the noise removal
-                    diff_percentage = np.count_nonzero(diff) / diff.size
-                    if diff_percentage <= (1 - similarity):
-                        should_save = False
-            
+            should_save = False
+
+            # Convert to grayscale
+            gray = cv2.cvtColor(current_image, cv2.COLOR_BGR2GRAY)
+
+            if prev_image is not None:
+                # Compute absolute difference
+                diff = cv2.absdiff(prev_image, gray)
+
+                # Apply noise filter
+                noise_mask = diff <= 4
+                filtered_diff = diff.copy()
+                filtered_diff[noise_mask] = 0
+
+                # Find contours on the filtered difference image
+                contours, _ = cv2.findContours(filtered_diff, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+                # Filter contours by area and calculate total change area
+                significant_contours = [c for c in contours if cv2.contourArea(c) > 50]  # Adjust as needed
+                total_change_area = sum(cv2.contourArea(c) for c in significant_contours)
+
+                # Calculate the change percentage
+                total_pixels = gray.shape[0] * gray.shape[1]
+                change_percentage = (total_change_area / total_pixels) * 100  # Convert to percentage
+
+                # Decide whether to save the image
+                if 0.1 < change_percentage < 50:  # Adjusted thresholds
+                    should_save = True
+
+                # Print change percentage for debugging
+                print(f"Change percentage: {change_percentage:.2f}%")
+
+                # Draw contours on the image (for debugging)
+                cv2.drawContours(current_image, significant_contours, -1, (0, 255, 0), 2)
+
             processed_image_queue.put((current_image, cam_number, pic_number, should_save, pictures_path, del_path))
+            prev_image = gray
+
         except Empty:
             print("Timeout waiting for image in compare function")
-          
+
 def save_image(processed_image_queue):
     picture_number = 1
     while True:
@@ -153,7 +161,7 @@ def save_image(processed_image_queue):
                 break
             current_image, cam_number, _, should_save, pictures_path, del_path = image_data
             
-            timestamp = datetime.now().strftime("%d-%m-%Y_%H;%M;%S")
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H;%M;%S")
             filename = f"cam{cam_number}_{timestamp}_{picture_number:05d}.jpg"
             
             RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
