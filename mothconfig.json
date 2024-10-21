@@ -3,10 +3,11 @@
         "nrphotos": 10,
         "quality": 95,
 
-        "comment": "similarity percentage scales from 0-100. 0 = delete all. 100 = save all",
-        "similarity_percentage": 100,
+        "comment": "Noise threshold is on a scale of 0-255 in grey value, the higher the number the more noise is removed but less small insects will be picked up",
         "noise_threshold": 4,
+        "comment2": "countour area is the minimum size of a blob of connected pixels which should be looked at for comparison",
         "contour_area_threshold": 50,
+        "comment3":" min & max percentage refer to the range of change in a picture which should be saved.",
         "min_change_percentage": 0.1,
         "max_change_percentage": 50,
 
