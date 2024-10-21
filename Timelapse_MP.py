@@ -10,6 +10,7 @@ from picamera2 import Picamera2
 from libcamera import controls
 from datetime import datetime
 from queue import Empty
+import logging
 
 def to_bool(value):
     if isinstance(value, bool): 
@@ -21,14 +22,10 @@ def to_bool(value):
     raise ValueError(f"Invalid boolean value: {value}")
 
 def get_base_paths():
-    # Get the directory where the script is located
     script_dir = Path(__file__).parent.resolve()
-    
-    # Default paths relative to the script location
     default_config_path = script_dir / 'mothconfig.json'
     default_pictures_path = script_dir / 'Pictures'
     default_del_path = script_dir / 'DEL'
-    
     return default_config_path, default_pictures_path, default_del_path
 
 def read_config(config_path):
@@ -36,10 +33,10 @@ def read_config(config_path):
         with open(config_path, 'r') as file:
             return json.load(file)
     except FileNotFoundError:
-        print(f"Config file not found: {config_path}")
+        logging.error(f"Config file not found: {config_path}")
         raise
     except json.JSONDecodeError:
-        print(f"Invalid JSON in config file: {config_path}")
+        logging.error(f"Invalid JSON in config file: {config_path}")
         raise
 
 def settings(config):
@@ -58,24 +55,26 @@ def settings(config):
         DEL_path = Path(config.get("DEL_path", str(default_del_path)))
         similarity = config.get("similarity_percentage", 99) / 100
         loop_time = config.get("loop_time", 1)
+        noise_threshold = config.get("noise_threshold", 4)
+        contour_area_threshold = config.get("contour_area_threshold", 50)
+        min_change_percentage = config.get("min_change_percentage", 0.1)
+        max_change_percentage = config.get("max_change_percentage", 50)
         
-        # Create date-specific directories
         today_date = datetime.now().strftime("%Y-%m-%d")
         pictures_path = file_path / today_date
         del_path = DEL_path / today_date
         pictures_path.mkdir(parents=True, exist_ok=True)
         del_path.mkdir(parents=True, exist_ok=True)
         
-        #camera settings & init
         resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)})
         picam2.configure(resolution)
         picam2.options["quality"] = quality
         picam2.start()
         time.sleep(2)
         
-        return picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time
+        return picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage
     except Exception as e:
-        print(f"Error initializing camera: {str(e)}")
+        logging.error(f"Error initializing camera: {str(e)}")
         if picam2:
             picam2.close()
         raise
@@ -83,19 +82,19 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
     picam2 = None
     try:
-        picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time = settings(config)
+        picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = settings(config)
         pic_number = 0
-        while datetime.now().strftime("%H:%M") != end_time: # and pic_number <= nrphotos:    #pay attention to the ":" when adding/ removing a hash
+        while datetime.now().strftime("%H:%M") != end_time:
             loop_start = time.time()
             picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
             current_image = picam2.capture_array()
-            raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path))
+            raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage))
             pic_number += 1
             time_elapsed = time.time() - loop_start
             if time_elapsed < loop_time:
                 time.sleep(loop_time - time_elapsed)
     except Exception as e:
-        print(f"Error in capture_and_queue: {str(e)}")
+        logging.error(f"Error in capture_and_queue: {str(e)}")
     finally:
         if picam2:
             picam2.stop()
@@ -110,24 +109,24 @@ def compare(raw_image_queue, processed_image_queue, similarity):
             if image_data is None:
                 processed_image_queue.put(None)
                 break
-            current_image, cam_number, pic_number, pictures_path, del_path = image_data
+            current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = image_data
             should_save = True
             if prev_image is not None:
                 gray1 = cv2.cvtColor(prev_image, cv2.COLOR_BGR2GRAY)
                 gray2 = cv2.cvtColor(current_image, cv2.COLOR_BGR2GRAY)
                 diff = cv2.absdiff(gray1, gray2)
-                #noise filter
-                noise_mask = diff <=4
+                noise_mask = diff <= noise_threshold
                 diff[noise_mask] = 0
-                #calculate the difference between this and the last picture
-                diff_percentage = np.count_nonzero(diff) / diff.size
-                if diff_percentage <= (1 - similarity):
+                contours, _ = cv2.findContours(diff, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                significant_contours = [c for c in contours if cv2.contourArea(c) > contour_area_threshold]
+                diff_percentage = sum(cv2.contourArea(c) for c in significant_contours) / diff.size
+                if min_change_percentage <= diff_percentage <= max_change_percentage:
                     should_save = False
             processed_image_queue.put((current_image, cam_number, pic_number, should_save, pictures_path, del_path))
             if should_save:
                 prev_image = current_image
         except Empty:
-            print("Timeout waiting for image in compare function")
+            logging.warning("Timeout waiting for image in compare function")
 
 def save_image(processed_image_queue):
     picture_number = 1
@@ -145,21 +144,25 @@ def save_image(processed_image_queue):
             if should_save:
                 save_path = pictures_path / filename
                 cv2.imwrite(str(save_path), RGB)
-                print(f"Image {picture_number} saved at {timestamp}")
+                logging.info(f"Image {picture_number} saved at {timestamp}")
             else:
                 del_save_path = del_path / filename
                 cv2.imwrite(str(del_save_path), RGB)
-                print(f"Image {picture_number} too similar. Saved in DEL at {timestamp}")
+                logging.info(f"Image {picture_number} too similar. Saved in DEL at {timestamp}")
             
             picture_number += 1
-            print(f"Queue size: {processed_image_queue.qsize()}")
+            logging.debug(f"Queue size: {processed_image_queue.qsize()}")
         except Empty:
-            print("Timeout waiting for image in save_image function")
+            logging.warning("Timeout waiting for image in save_image function")
 
 def main():
     try:
         config_path, _, _ = get_base_paths()
         config = read_config(config_path)
+        
+        logging.basicConfig(filename='mothcam.log', level=logging.INFO, 
+                            format='%(asctime)s - %(levelname)s - %(message)s')
+        
         raw_image_queue = mp.Queue(maxsize=50)
         processed_image_queue = mp.Queue(maxsize=50)
         
@@ -176,7 +179,7 @@ def main():
         compare_process.join()
         save_process.join()
     except Exception as e:
-        print(f"Error in main function: {str(e)}")
+        logging.error(f"Error in main function: {str(e)}")
 
 if __name__ == "__main__":
     main()
