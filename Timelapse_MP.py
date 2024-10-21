@@ -53,7 +53,6 @@ def settings(config):
         camera_h = config.get("camera_h", 3040)
         file_path = Path(config.get("file_path", str(default_pictures_path)))
         DEL_path = Path(config.get("DEL_path", str(default_del_path)))
-        similarity = config.get("similarity_percentage", 99) / 100
         loop_time = config.get("loop_time", 1)
         noise_threshold = config.get("noise_threshold", 4)
         contour_area_threshold = config.get("contour_area_threshold", 50)
@@ -72,7 +71,7 @@ def settings(config):
         picam2.start()
         time.sleep(2)
         
-        return picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage
+        return picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage
     except Exception as e:
         logging.error(f"Error initializing camera: {str(e)}")
         if picam2:
@@ -82,7 +81,7 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
     picam2 = None
     try:
-        picam2, cam_number, pictures_path, del_path, end_time, similarity, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = settings(config)
+        picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = settings(config)
         pic_number = 0
         while datetime.now().strftime("%H:%M") != end_time:
             loop_start = time.time()
@@ -101,7 +100,7 @@ def capture_and_queue(config, raw_image_queue):
             picam2.close()
         raw_image_queue.put(None)
 
-def compare(raw_image_queue, processed_image_queue, similarity):
+def compare(raw_image_queue, processed_image_queue):
     prev_image = None
     while True:
         try:
@@ -122,6 +121,9 @@ def compare(raw_image_queue, processed_image_queue, similarity):
                 diff_percentage = sum(cv2.contourArea(c) for c in significant_contours) / diff.size
                 if min_change_percentage <= diff_percentage <= max_change_percentage:
                     should_save = False
+                print(f"Difference percentage: {diff_percentage:.2%}")
+                print(f"Number of contours: {len(contours)}")
+                print(f"Number of significant contours: {len(significant_contours)}")
             processed_image_queue.put((current_image, cam_number, pic_number, should_save, pictures_path, del_path))
             if should_save:
                 prev_image = current_image
@@ -145,10 +147,12 @@ def save_image(processed_image_queue):
                 save_path = pictures_path / filename
                 cv2.imwrite(str(save_path), RGB)
                 logging.info(f"Image {picture_number} saved at {timestamp}")
+                print(f"Image {picture_number} saved at {timestamp}")
             else:
                 del_save_path = del_path / filename
                 cv2.imwrite(str(del_save_path), RGB)
                 logging.info(f"Image {picture_number} too similar. Saved in DEL at {timestamp}")
+                print(f"Image {picture_number} too similar. Saved in DEL at {timestamp}")
             
             picture_number += 1
             logging.debug(f"Queue size: {processed_image_queue.qsize()}")
@@ -167,8 +171,7 @@ def main():
         processed_image_queue = mp.Queue(maxsize=50)
         
         capture_process = mp.Process(target=capture_and_queue, args=(config, raw_image_queue))
-        compare_process = mp.Process(target=compare, args=(
-        raw_image_queue, processed_image_queue, config['similarity_percentage'] / 100))
+        compare_process = mp.Process(target=compare, args=(raw_image_queue, processed_image_queue))
         save_process = mp.Process(target=save_image, args=(processed_image_queue,))
         
         capture_process.start()
