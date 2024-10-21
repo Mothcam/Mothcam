@@ -114,15 +114,13 @@ def capture_and_queue(config, raw_image_queue):
                 
                 print(f"\nComparing image {pic_number-1} to {pic_number}:")
                 print(f"  Change percentage: {change_percentage:.2f}%")
-                print(f"  Number of significant contours: {num_contours}")
-                
+                 
                 if num_contours > 0:
                     sorted_contours = sorted(significant_contours, key=cv2.contourArea, reverse=True)
-                    print(f"  Top {top_contours_to_print} largest contours (area in pixels):")
                     for j, contour in enumerate(sorted_contours[:top_contours_to_print], 1):
                         print(f"    Contour {j}: {cv2.contourArea(contour):.0f}")
                 
-                should_save = change_percentage < min_change_percentage or change_percentage > max_change_percentage
+                should_save = not change_percentage < min_change_percentage or change_percentage > max_change_percentage
 
                 if should_save:
                     print(f"  Decision: Saving image (change outside {min_change_percentage:.2f}% - {max_change_percentage:.2f}% range)")
