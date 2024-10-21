@@ -5,6 +5,10 @@
 
         "comment": "similarity percentage scales from 0-100. 0 = delete all. 100 = save all",
         "similarity_percentage": 100,
+        "noise_threshold": 4,
+        "contour_area_threshold": 50,
+        "min_change_percentage": 0.1,
+        "max_change_percentage": 50,
 
         "cam_number": "00",
         "camera_w": 4052,
