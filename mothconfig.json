@@ -1,17 +1,23 @@
 {
-        "end_time": "06:00",
-        "nrphotos": 10,
-        "quality": 95,
+    "end_time": "06:00",
+    "nrphotos": 10,
+    "quality": 95,
+    "cam_number": "00",
+    "camera_w": 4052,
+    "camera_h": 3040,
 
-        "comment": "Noise threshold is on a scale of 0-255 in grey value, the higher the number the more noise is removed but less small insects will be picked up",
-        "noise_threshold": 4,
-        "comment2": "countour area is the minimum size of a blob of connected pixels which should be looked at for comparison",
-        "contour_area_threshold": 50,
-        "comment3":" min & max percentage refer to the range of change in a picture which should be saved.",
-        "min_change_percentage": 0.1,
-        "max_change_percentage": 50,
+    "noise_threshold": 4,
+    "contour_area_threshold": 50,
+    "min_change_percentage": 0.1,
+    "max_change_percentage": 50,
+        
+        "comments": {
+        "noise_threshold": "Defines the minimum pixel value difference (0-255) to be considered as change. Higher values reduce sensitivity to small changes but may miss subtle movements.",
+        "contour_area_threshold": "Minimum size (in pixels) of a connected area of changed pixels to be considered significant. Helps filter out very small or insignificant changes.",
+        "change_percentage": "min_change_percentage and max_change_percentage define the acceptable range of image change (as a percentage of total pixels) for saving an image. Changes outside this range are either too small or too large to be of interest."
+    }
 
-        "cam_number": "00",
-        "camera_w": 4052,
-        "camera_h": 3040
+
+
+    
 }
