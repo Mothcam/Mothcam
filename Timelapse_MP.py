@@ -11,6 +11,7 @@ from libcamera import controls
 from datetime import datetime
 from queue import Empty
 import logging
+from compare import compare_images  # Import the compare_images function
 
 def to_bool(value):
     if isinstance(value, bool): 
@@ -58,7 +59,6 @@ def settings(config):
         contour_area_threshold = config.get("contour_area_threshold", 50)
         min_change_percentage = config.get("min_change_percentage", 0.1)
         max_change_percentage = config.get("max_change_percentage", 50)
-        top_contours_to_print = config.get("top_contours_to_print", 5)
         
         today_date = datetime.now().strftime("%Y-%m-%d")
         pictures_path = file_path / today_date
@@ -72,70 +72,24 @@ def settings(config):
         picam2.start()
         time.sleep(2)
         
-        return (picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, 
-                noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, 
-                top_contours_to_print)
+        return picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage
     except Exception as e:
         logging.error(f"Error initializing camera: {str(e)}")
         if picam2:
             picam2.close()
         raise
 
-def compare_images(prev_image, current_image, noise_threshold, contour_area_threshold):
-    prev_gray = cv2.cvtColor(prev_image, cv2.COLOR_BGR2GRAY)
-    curr_gray = cv2.cvtColor(current_image, cv2.COLOR_BGR2GRAY)
-    diff = cv2.absdiff(prev_gray, curr_gray)
-    noise_mask = diff <= noise_threshold
-    filtered_diff = diff.copy()
-    filtered_diff[noise_mask] = 0
-    contours, _ = cv2.findContours(filtered_diff, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    significant_contours = [c for c in contours if cv2.contourArea(c) > contour_area_threshold]
-    total_change_area = sum(cv2.contourArea(c) for c in significant_contours)
-    total_pixels = curr_gray.shape[0] * curr_gray.shape[1]
-    change_percentage = (total_change_area / total_pixels) * 100
-    return change_percentage, len(significant_contours), significant_contours
-
 def capture_and_queue(config, raw_image_queue):
     picam2 = None
     try:
-        (picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, 
-         noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage,
-         top_contours_to_print) = settings(config)
+        picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = settings(config)
         pic_number = 0
-        prev_image = None
         while datetime.now().strftime("%H:%M") != end_time:
             loop_start = time.time()
             picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
             current_image = picam2.capture_array()
-            
-            if prev_image is not None:
-                change_percentage, num_contours, significant_contours = compare_images(
-                    prev_image, current_image, noise_threshold, contour_area_threshold)
-                
-                print(f"\nComparing image {pic_number-1} to {pic_number}:")
-                print(f"  Change percentage: {change_percentage:.2f}%")
-                 
-                if num_contours > 0:
-                    sorted_contours = sorted(significant_contours, key=cv2.contourArea, reverse=True)
-                    for j, contour in enumerate(sorted_contours[:top_contours_to_print], 1):
-                        print(f"    Contour {j}: {cv2.contourArea(contour):.0f}")
-                
-                should_save = not change_percentage < min_change_percentage or change_percentage > max_change_percentage
-
-                if should_save:
-                    print(f"  Decision: Saving image (change outside {min_change_percentage:.2f}% - {max_change_percentage:.2f}% range)")
-                else:
-                    print(f"  Decision: Not saving image (change within {min_change_percentage:.2f}% - {max_change_percentage:.2f}% range)")
-            else:
-                should_save = True
-                print(f"\nSaving image {pic_number} (first image)")
-            
-            raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, should_save))
-            
-            if should_save:
-                prev_image = current_image
+            raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage))
             pic_number += 1
-            
             time_elapsed = time.time() - loop_start
             if time_elapsed < loop_time:
                 time.sleep(loop_time - time_elapsed)
@@ -147,30 +101,81 @@ def capture_and_queue(config, raw_image_queue):
             picam2.close()
         raw_image_queue.put(None)
 
-def save_image(raw_image_queue):
+def compare(raw_image_queue, processed_image_queue):
+    prev_image = None
+    prev_filename = None
     while True:
         try:
             image_data = raw_image_queue.get()
             if image_data is None:
+                processed_image_queue.put(None)
                 break
-            current_image, cam_number, pic_number, pictures_path, del_path, should_save = image_data
+
+            current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = image_data
             
             timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-            filename = f"cam{cam_number}_{timestamp}_{pic_number:05d}.jpg"
+            current_filename = f"cam{cam_number}_{timestamp}_{pic_number:05d}.jpg"
+            should_save = True
+
+            if prev_image is not None:
+                # Use the imported compare_images function
+                change_percentage, num_significant_contours, significant_contours = compare_images(
+                    prev_image, 
+                    current_image,
+                    noise_threshold,
+                    contour_area_threshold
+                )
+
+                print(f"\nComparing {prev_filename} to {current_filename}:")
+                print(f"  Change percentage: {change_percentage:.2f}%")
+                print(f"  Number of significant contours: {num_significant_contours}")
+                
+                # Print details of the top 5 largest contours
+                if significant_contours:
+                    sorted_contours = sorted(significant_contours, key=cv2.contourArea, reverse=True)
+                    print("  Top 5 largest contours (area in pixels):")
+                    for j, contour in enumerate(sorted_contours[:5], 1):
+                        print(f"    Contour {j}: {cv2.contourArea(contour):.0f}")
+                
+                should_save = min_change_percentage < change_percentage < max_change_percentage
+            else:
+                print(f"\nKept {current_filename} (first image)")
+
+            processed_image_queue.put((current_image, cam_number, pic_number, should_save, pictures_path, del_path))
+            
+            if should_save:
+                prev_image = current_image
+                prev_filename = current_filename
+                
+        except Empty:
+            logging.warning("Timeout waiting for image in compare function")
+
+def save_image(processed_image_queue):
+    picture_number = 1
+    while True:
+        try:
+            image_data = processed_image_queue.get()
+            if image_data is None:
+                break
+            current_image, cam_number, _, should_save, pictures_path, del_path = image_data
+            
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+            filename = f"cam{cam_number}_{timestamp}_{picture_number:05d}.jpg"
             
             RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
             if should_save:
                 save_path = pictures_path / filename
                 cv2.imwrite(str(save_path), RGB)
-                logging.info(f"Image {pic_number} saved at {timestamp}")
                 print(f"  Result: Kept {filename} in original directory")
+                logging.info(f"Image {picture_number} saved at {timestamp}")
             else:
                 del_save_path = del_path / filename
                 cv2.imwrite(str(del_save_path), RGB)
-                logging.info(f"Image {pic_number} too similar. Saved in DEL at {timestamp}")
                 print(f"  Result: Moved {filename} to DEL directory")
+                logging.info(f"Image {picture_number} moved to DEL at {timestamp}")
             
-            logging.debug(f"Queue size: {raw_image_queue.qsize()}")
+            picture_number += 1
+            logging.debug(f"Queue size: {processed_image_queue.qsize()}")
         except Empty:
             logging.warning("Timeout waiting for image in save_image function")
 
@@ -183,14 +188,18 @@ def main():
                             format='%(asctime)s - %(levelname)s - %(message)s')
         
         raw_image_queue = mp.Queue(maxsize=50)
+        processed_image_queue = mp.Queue(maxsize=50)
         
         capture_process = mp.Process(target=capture_and_queue, args=(config, raw_image_queue))
-        save_process = mp.Process(target=save_image, args=(raw_image_queue,))
+        compare_process = mp.Process(target=compare, args=(raw_image_queue, processed_image_queue))
+        save_process = mp.Process(target=save_image, args=(processed_image_queue,))
         
         capture_process.start()
+        compare_process.start()
         save_process.start()
         
         capture_process.join()
+        compare_process.join()
         save_process.join()
     except Exception as e:
         logging.error(f"Error in main function: {str(e)}")
