@@ -87,8 +87,10 @@ def capture_and_queue(config, raw_image_queue):
 	try:
 		picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage = settings(
 			config)
+		
 		pic_number = 0
-		while datetime.now().strftime("%H:%M") != end_time:
+		
+		while datetime.now().strftime("%H:%M") != end_time: #and i <= nrphotos: # pay attention to the location of the colon
 			loop_start = time.time()
 			picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 			current_image = picam2.capture_array()
