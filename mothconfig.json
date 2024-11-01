@@ -7,7 +7,7 @@
     "camera_h": 3040,
 
     "noise_threshold": 4,
-    "contour_area_threshold": 50,
+    "contour_area_threshold": 1000,
     "min_change_percentage": 0.1,
     "max_change_percentage": 50,
         
