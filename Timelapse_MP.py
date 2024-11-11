@@ -91,7 +91,6 @@ def capture_and_queue(config, raw_image_queue):
         pic_number = 0
         
         while datetime.now().strftime("%H:%M") != end_time: #and i <= nrphotos: 	# pay attention to the location of the colon, remove hash to use both end time and nrphotos
-			loop_start = time.time()
             loop_start = time.time()
             picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
             current_image = picam2.capture_array()
