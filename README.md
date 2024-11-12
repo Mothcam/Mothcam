@@ -63,7 +63,7 @@ sudo systemctl start syncthing@user
 
 Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the Pi by typing the following into your browser
 ```
-[PI-IP-address]:8384
+[Pi-IP-address]:8384
 ```
 go to "add external device" and enter the device ID of the other device, this ID can be found in the actions menu on the top right of the page. To access syncthing on your device install [Syncthing](https://syncthing.net/downloads/) and open the program on your device.
 Once the devices have added each other it's possible to share folders with each other. To share a folder go to "Add folder" on the syncthing page of the Pi. for the Map location enter 
