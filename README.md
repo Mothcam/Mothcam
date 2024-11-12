@@ -53,7 +53,7 @@ to start editing the config file. In the config file, replace "< address >127.0.
 ```
 > [!WARNING]
 > Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page when syncthing is running on the pi. If this is something you want to avoid you can fill in the Pi's IP adress here instead of the 0.0.0.0
-> You can have syncthing running all the time by using the following commands (replace "user" with the username)
+You can have syncthing running all the time by using the following commands (replace "user" with the username)
 
 ````
 sudo systemctl enable syncthing@user
