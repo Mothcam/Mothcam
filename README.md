@@ -30,7 +30,6 @@ sudo apt install git
 git clone https://github.com/Mothcam/Mothcam.git
 sudo apt install -y python3-picamera2 --no-install-recommends
 sudo apt install python3-opencv
-sudo apt install python3-numpy
 ```
 (use: sudo apt install -y python3-picamera2 if you need the GUI version)
 
@@ -48,7 +47,7 @@ After the initial run, use ctrl+c to kill the application. Type
 cd ~
 nano ~/.config/syncthing/config.xml
 ```
-to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" with the following in row 105. With ctrl + / you can jump to this row. 
+to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" with the following in row 46. With ctrl + / you can jump to this row. 
 ```
 <address>0.0.0.0:8384</address>
 ```
