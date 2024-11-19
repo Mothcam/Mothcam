@@ -61,6 +61,7 @@ def settings(config):
 		contour_area_threshold = config.get("contour_area_threshold", 50)
 		min_change_percentage = config.get("min_change_percentage", 0.1)
 		max_change_percentage = config.get("max_change_percentage", 50)
+		stop_method = config.get("stop_method", "time")
 		save_all_images = to_bool(config.get("save_all_images", True))
 		
 		today_date = datetime.now().strftime("%Y-%m-%d")
@@ -75,7 +76,7 @@ def settings(config):
 		picam2.start()
 		time.sleep(2)
 		
-		return picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images
+		return picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, stop_method, save_all_images
 	except Exception as e:
 		print(f"Error initializing camera: {str(e)}")
 		if picam2:
@@ -86,12 +87,17 @@ def settings(config):
 def capture_and_queue(config, raw_image_queue):
 	picam2 = None
 	try:
-		picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images = settings(config)
+		picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, stop_method, save_all_images = settings(config)
 		
 		pic_number = 0
 		
-		while datetime.now().strftime(
-				"%H:%M") != end_time:  # and i <= nrphotos: 	# pay attention to the location of the colon, remove hash to use both end time and nrphotos
+		if stop_method == "time" and datetime.now().strftime("%H:%M") == end_time:
+			break
+            elif stop_method == "photos" and pic_number >= nrphotos:
+			break
+            elif stop_method == "either" and (datetime.now().strftime("%H:%M") == end_time and pic_number >= nrphotos):
+			break
+			
 			loop_start = time.time()
 			picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 			current_image = picam2.capture_array()
@@ -187,7 +193,6 @@ def save_image(processed_image_queue):
 			print(f"Queue size: {processed_image_queue.qsize()}")
 		except Empty:
 			print("Timeout waiting for image in save_image function")
-
 
 def main():
 	try:
