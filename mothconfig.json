@@ -1,6 +1,7 @@
 {
     "end_time": "06:00",
     "nrphotos": 10,
+    "save_all_images": true 
     "quality": 95,
     "cam_number": "00",
     "camera_w": 4052,
