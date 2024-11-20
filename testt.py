@@ -91,23 +91,22 @@ def capture_and_queue(config, raw_image_queue):
 		
 		pic_number = 0
 
-	While True:
-		if stop_method == "end_time" and datetime.now().strftime("%H:%M") == end_time:
-			break
-		elif stop_method == "nrphotos" and pic_number >= nrphotos:
-			break
-		elif stop_method == "either" and (datetime.now().strftime("%H:%M") == end_time and pic_number >= nrphotos):
-			break
+		while True:
+			if stop_method == "end_time" and datetime.now().strftime("%H:%M") == end_time:
+				break
+			elif stop_method == "nrphotos" and pic_number >= nrphotos:
+				break
+			elif stop_method == "either" and (datetime.now().strftime("%H:%M") == end_time and pic_number >= nrphotos):
+				break
 			
 			loop_start = time.time()
 			picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 			current_image = picam2.capture_array()
-			raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold,
-								 contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images))
+			raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images))
 			pic_number += 1
 			time_elapsed = time.time() - loop_start
 			if time_elapsed < loop_time:
-				time.sleep(loop_time - time_elapsed)
+			time.sleep(loop_time - time_elapsed)
 	except Exception as e:
 		print(f"Error in capture_and_queue: {str(e)}")
 	finally:
@@ -174,7 +173,7 @@ def save_image(processed_image_queue):
 			RGB = cv2.cvtColor(current_image, cv2.COLOR_BGR2RGB)
 			
 			if save_all_images:
-					if should_save:
+				if should_save:
 					save_path = pictures_path / filename
 					cv2.imwrite(str(save_path), RGB)
 					print(f"  Result: Kept {filename} in original directory")
