@@ -17,8 +17,7 @@
         "comments_and_explainations": {
         "stop_method": "can be set to 'end_time' 'nrphotos' or 'either'. If the settings is set to either the script ends at what is being reached first",
             
-        "save_all_images": "if set to true, two folders will be made, one with all pictures which will be saved in either condition and one called DEL for the images which will be deleted if this settings is set to False. If the settings is set to false, only images which differ from",
-                            "former will be stored",
+        "save_all_images": "if set to true, two folders will be made, one with all pictures which will be saved in either condition and one called DEL for the images which will be deleted if this settings is set to False. If the settings is set to false, only images which differ from former will be stored",
        
         "noise_threshold": "Defines the minimum pixel value difference (0-255) to be considered as change. Higher values reduce sensitivity to small changes but may miss subtle movements.",
             
