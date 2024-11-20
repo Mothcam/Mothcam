@@ -121,6 +121,7 @@ def compare_images(raw_image_queue, processed_image_queue):
 	while True:
 		image_data = raw_image_queue.get()
 		if image_data is None:
+			processed_image_queue.put(None)
 			break
 		
 		current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images = image_data
