@@ -109,7 +109,7 @@ def capture_and_queue(config, raw_image_queue):
 			raw_image_queue.put((current_image, cam_number, pic_number, pictures_path, del_path, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, save_all_images))
 			pic_number += 1
 			time_elapsed = time.time() - loop_start
-			if time_elapsed < loop_time:
+				if time_elapsed < loop_time:
 			time.sleep(loop_time - time_elapsed)
 	except Exception as e:
 		print(f"Error in capture_and_queue: {str(e)}")
