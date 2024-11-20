@@ -65,10 +65,14 @@ def settings(config):
 		save_all_images = to_bool(config.get("save_all_images", True))
 		
 		today_date = datetime.now().strftime("%Y-%m-%d")
-		pictures_path = file_path / today_date
+		pictures_path = file_path / today_date		
 		del_path = DEL_path / today_date
-		pictures_path.mkdir(parents=True, exist_ok=True)
-		del_path.mkdir(parents=True, exist_ok=True)
+
+		if save_all_images is False:
+			pictures_path.mkdir(parents=True, exist_ok=True)
+		else:
+			pictures_path.mkdir(parents=True, exist_ok=True)
+			del_path.mkdir(parents=True, exist_ok=True)
 		
 		resolution = picam2.create_still_configuration({"size": (camera_w, camera_h)})
 		picam2.configure(resolution)
