@@ -106,7 +106,7 @@ def capture_and_queue(config, raw_image_queue):
         if picam2:
             picam2.stop()
             picam2.close()
-            raw_image_queue.put(None)
+        raw_image_queue.put(None)
 
 
 def compare_images(raw_image_queue, processed_image_queue):
