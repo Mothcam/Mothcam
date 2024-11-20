@@ -90,12 +90,13 @@ def capture_and_queue(config, raw_image_queue):
 		picam2, cam_number, pictures_path, del_path, end_time, nrphotos, loop_time, noise_threshold, contour_area_threshold, min_change_percentage, max_change_percentage, stop_method, save_all_images = settings(config)
 		
 		pic_number = 0
-		
-		if stop_method == "time" and datetime.now().strftime("%H:%M") == end_time:
+
+	While True:
+		if stop_method == "end_time" and datetime.now().strftime("%H:%M") == end_time:
 			break
-            elif stop_method == "photos" and pic_number >= nrphotos:
+		elif stop_method == "nrphotos" and pic_number >= nrphotos:
 			break
-            elif stop_method == "either" and (datetime.now().strftime("%H:%M") == end_time and pic_number >= nrphotos):
+		elif stop_method == "either" and (datetime.now().strftime("%H:%M") == end_time and pic_number >= nrphotos):
 			break
 			
 			loop_start = time.time()
