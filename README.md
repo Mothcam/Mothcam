@@ -113,4 +113,13 @@ It can be useful to have the crontab write an automatic logfile in case any erro
 ```
 E.g.: 23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
 ```
+```
+##Installing an RTC unit
 
+>.[Disclaimer].
+> The RTC module used in these instructions was a DS1307 module therefore these instruction might not work on another type of RTC module.
+
+First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
+```
+sudo raspi-config
+```
