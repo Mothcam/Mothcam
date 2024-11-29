@@ -112,14 +112,58 @@ It can be useful to have the crontab write an automatic logfile in case any erro
 >> /path/to/logfile.log 2>&1
 ```
 E.g.: 23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
-```
-```
-##Installing an RTC unit
 
->.[Disclaimer].
-> The RTC module used in these instructions was a DS1307 module therefore these instruction might not work on another type of RTC module.
+## Installing an RTC unit
+> [!Warning]
+> The RTC module used in these instructions was a DS1307 module, these instruction might not work on another type of RTC module.
 
 First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
 ```
 sudo raspi-config
+```
+Navigate to interface options then to I2C and enable the I2C. Once this is done exit the configuration tool and reboot the system with
+```
+sudo reboot
+```
+Now install the I2C tools with the following command and reboot the Pi afterwards
+```
+sudo apt install -y i2c-tools python3-smbus
+```
+Once the tools have been installed use the i2cdetect command to verify the RTC module is being detected
+```
+i2cdetect -y 1
+```
+In the output of this command look for an adress, typically this is 0x68, this adress indicates the DS1307 module is connected. 
+Next the RTC kernel module needs to be loaded and the RTC needs to be added to the system
+```
+sudo modprobe rtc-ds1307
+echo "ds1307 0x68" | sudo tee /sys/class/i2c-adapter/i2c-1/new_device
+```
+It should now be possible to read the RTC module using
+```
+sudo hwclock -r
+```
+If needed the RTC module can be synchronized to the Pi's system clock using
+```
+sudo hwclock -w
+``` 
+In order to have load the RTC automatically at boot /boot/firmware/config.txt needs to be edited. This can be done by entering the entering the following command
+```
+sudo nano /boot/firmware/config.txt
+```
+At the end of this file add the following line
+```
+dtoverlay=i2c-rtc,ds1307
+```
+After adding the line save and exit the file with Ctrl+O, Enter, Ctrl+X and reboot the Pi
+
+Optionally the Pi's fake hardware clock can be disabled if this is interfering with the RTC module. In order to do this run the following commands
+```
+sudo systemctl disable fake-hwclock 
+sudo apt remove -y fake-hwclock 
+sudo rm /etc/adjtime
+```
+Once the RTC is fully set up reboot the Pi one more time and check if the RTC is working by using
+```
+sudo hwclock -r
 ```
