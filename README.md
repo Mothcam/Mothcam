@@ -54,7 +54,7 @@ to start editing the config file. In the config file, replace "< address >127.0.
 > [!WARNING]
 > Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page when syncthing is running on the pi.
 
-You can have syncthing running all the time by using the following commands (replace "user" with the Pi's username)
+You can have syncthing running at boot by using the following commands (replace "user" with the Pi's username)
 
 ````
 sudo systemctl enable syncthing@user
@@ -98,8 +98,9 @@ Within this file the following settings can be found and adjusted:
 
 ## Installing an RTC unit
 > [!Warning]
-> The RTC module used in these instructions was a DS1307 module, these instruction might not work on another type of RTC module.
+> The RTC module used in these instructions was a DS1307 module, these instructions might not work on another type of RTC module.
 
+To make sure the Pi starts the script at the correct time an external RTC (real time clock) unit was used.
 First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
 ```
 sudo raspi-config
