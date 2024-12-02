@@ -6,7 +6,6 @@ Mothcam is a repository with the scripts and configuration files designed to set
 - Raspberry Pi (with Raspberry Pi OS Lite (64-bit))
 - Picamera module 3
 - Ribbon cable*
-- (LISIPAROI) halo LEDs
 - Computer/laptop**
 - Monitor*** 
 - Keyboard*** (& mouse****)
