@@ -96,30 +96,6 @@ Within this file the following settings can be found and adjusted:
 - min_change_percentage: defines the minimum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with small changes such as a mosquito moving.
 - max_change_percentage: defines the maximum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with big changes such as leaves falling into the trap.
 
-## Running the timelapse script
-To run the timelapse script manually the following sequence of commands can be used
-```
-cd Mothcam
-python3 Timelapse_AF.py
-```
-To run the script automatically at a set time every day a crontab can be created. To open the crontab editing evironment type
-```
-crontab -e
-```
-At the bottom of this environment a new crontab can be added. The format of a crontab is as follows: minute (00-60), hour (00-24), day of month (00-31), month (00-12) and day of week (0-7) followed by the command you want the crontab to execute. To make the crontab run every minute or hour etc. use an * instead of a number in that spot. E.g. to run the Timelapse_AF.py script at 09.23 AM every day enter the following crontab
-```
-23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_MP.py
-```
-After entering the crontab press ctrl+X, Y and then enter to save the crontab. To check if the crontab installed successfully type
-```
-crontab -l
-```
-It can be useful to have the crontab write an automatic logfile in case any errors occur. To do this enter the following line directly behind the crontab
-```
->> /path/to/logfile.log 2>&1
-```
-E.g.: 23 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
-
 ## Installing an RTC unit
 > [!Warning]
 > The RTC module used in these instructions was a DS1307 module, these instruction might not work on another type of RTC module.
