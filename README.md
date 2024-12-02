@@ -1,5 +1,5 @@
 # Mothcam
-Mothcam is a repository with the scripts and configuration files designed to set up a Raspberry Pi to be used in a fully automated camera trap to monitor moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4. This README will assume  the user has experience with Linux and Raspberry Pi. For those without Linux and/or Raspberry Pi experience README_beginners,md was made, this README contains additional basic instructions on how to set up a Raspberry Pi.
+Mothcam is a repository with the scripts and configuration files designed to set up a Raspberry Pi to be used in a fully automated camera trap to monitor moth assemblages. The repositories are written with Python and make use of the [Picamera2 repository](https://github.com/raspberrypi/picamera2/tree/main). This repository has been tested with a Raspberry Pi4. This README will assume  the user has experience with Linux and Raspberry Pi. For those without Linux and/or Raspberry Pi experience README_beginners.md was made, this README contains additional basic instructions on how to set up a Raspberry Pi.
 
 ## Required equipment
 ```
