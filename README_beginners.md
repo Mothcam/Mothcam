@@ -5,7 +5,6 @@ This README is meant for people who have little to no experience working with a 
 - Raspberry Pi (with Raspberry Pi OS Lite (64-bit))
 - Picamera module 3
 - Ribbon cable*
-- (LISIPAROI) halo LEDs
 - Computer/laptop**
 - Monitor*** 
 - Keyboard*** (& mouse****)
