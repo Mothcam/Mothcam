@@ -28,7 +28,7 @@ The following steps can be followed to install an OS:
 7. In the general tab:
    -  Make a Hostname
    -  Set a username and password
-   -   nter the wifi settings (preferably of a hotspot or router to allow easy determination of the Pi's IP adress)
+   -  Enter the wifi settings (preferably of a hotspot or router to allow easy determination of the Pi's IP adress)
    -   Set the timezone and keyboard settings to your preferred settings
 8. In the Services menu turn on SSH with password authentication
 9. Save the settings and then click on yes to apply these settings to the OS
@@ -47,7 +47,7 @@ If you are using SSH the Pi's IP can be found on the router of the Wi-Fi network
 -  ctrl + c: this will stop the process you are currently running on the Pi such as a Python script. Note that this only works when manually running a script, not when running a script automatically through crontab.
 -  Right mouse click: used to paste a copied line of text into a Pi's command line.
 -  sudo raspi-config: accesses the settings menu of a Raspberry Pi. Giving the option to e.g. change time-zone, keyboard layout, and enable settings such as Wi-Fi and I2C.
--  ls: used to list all items in your current working directory
+-  ls: used to list all items in your current working directory.
 -  cd: used to change directory, this command works by inputting "cd name of directory". E.g. say you want to go into the Mothcam directory you'd input "cd Mothcam". Pay attention to capital letters as Linux is capital sensitive! When you input just "cd" it will send you back to the home directory.
 -  pwd: displays the path of your current working directory.
 -  sudo: allows a user to run a command with elevated privileges. It is the equivalent of "run as administrator" on Windows.
@@ -138,12 +138,12 @@ Within this file the following settings can be found and adjusted:
 -  save_all_images: if set to 'True' two folders will be made, one named Pictures and one named DEL. All pictures the script deems to similar to the previous will be moved into the DEL file. When this setting is set to 'False' all pictures which would otherwise be moved to DEL will be deleted permanently.
 
 - quality: sets the JPEG quality level, can be set to a number from 0-95 with 95 being the highest quality.
-- cam_number: sets the name of the camera in its pictures' file names. E.g. when set to 01 the file name would be as follows cam01_2024-12-2_113500_00001.jpg.
+- cam_number: sets the name of the camera in its pictures' file names. E.g. when set to 01 the file name would be as follows cam01_2024-12-02_113500_00001.jpg. With the following elements respectively following after: date, time at which the picture was taken, and the picture's number.
 - camera_w: sets the width of the pictures in pixels.
 - camera_h: sets the height of the pictures in pixels.
 
 - noise_threshold: defines the minimum pixel value difference (0-255) to be considered as change. Setting this to a higher value reduces sensitivity to small changes (such as changes in lighting) but may miss subtle movements.
-- contour_area_threshold: defines the minimum size (in pixels) of a connected area of changed pixels to be considered significant. This helps filter out very small or insignificant changes 
+- contour_area_threshold: defines the minimum size (in pixels) of a connected area of changed pixels to be considered significant. This helps filter out very small or insignificant changes.
 - min_change_percentage: defines the minimum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with small changes such as a mosquito moving.
 - max_change_percentage: defines the maximum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with big changes such as leaves falling into the trap.
 
@@ -157,7 +157,7 @@ To run the script automatically at a set time every day a crontab can be created
 ```
 crontab -e
 ```
-At the bottom of this environment a new crontab can be added. The format of a crontab is as follows: minute (00-60), hour (00-24), day of month (00-31), month (00-12) and day of week (0-7) followed by the command you want the crontab to execute. To make the crontab run every minute or hour etc. use an * instead of a number in that spot. E.g. to start the Timelapse_MP.py script at 09.45 AM every day enter the following crontab
+At the bottom of this environment a new crontab can be added. The format of a crontab is as follows: minute (00-60), hour (00-24), day of month (00-31), month (00-12) and day of week (0-7) followed by the command you want the crontab to execute. To make the crontab run every minute or hour etc. use an * instead of a number in that spot. E.g. to start the Timelapse_MP.py script at 09.45 AM every day enter the following crontab, making sure to replace your_pi_hostname with the hostname you set for the Pi.
 ```
 45 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_MP.py
 ```
@@ -165,11 +165,11 @@ After entering the crontab press ctrl+X, Y and then enter to save the crontab. T
 ```
 crontab -l
 ```
-It can be useful to have the crontab write an automatic logfile in case any errors occur. To do this enter the following line directly behind the crontab
+It can be useful to have the crontab write an automatic logfile in case any errors occur. To do this enter the following line directly behind the crontab, in this command replace the /path/to/ with the complete pathing of the location you want the logfile to save in.
 ```
 >> /path/to/logfile.log 2>&1
 ```
-E.g.: 45 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
+E.g.: 45 09 * * * /usr/bin/python3 /home/you_pi_hostname/Mothcam/Timelapse_AF.py >> /path/to/logfile.log 2>&1
 
 ## Installing an RTC unit
 > [!Warning]
@@ -215,7 +215,7 @@ At the end of this file add the following line
 ```
 dtoverlay=i2c-rtc,ds1307
 ```
-After adding the line save and exit the file with Ctrl+X, Y and, Enter. Then reboot the Pi.
+After adding the line save and exit the file with ctrl+X, then Y and, Enter. Now reboot the Pi.
 
 Optionally the Pi's fake hardware clock can be disabled if this is interfering with the RTC module. In order to do this run the following commands
 ```
@@ -227,5 +227,5 @@ Once the RTC is fully set up reboot the Pi one more time and check if the RTC is
 ```
 sudo hwclock -r
 ```
-
+After following these steps the Pi is fully prepared to be used in an automatic moth cameratrap set-up!
 
