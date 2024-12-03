@@ -66,7 +66,7 @@ After editing the settings the script to take pictures can be run. This script i
 > The RTC module used in these instructions was a DS1307 module, these instructions might not work on another type of RTC module.
 
 To make sure the Pi starts the script at the correct time an external RTC (real time clock) unit was used.
-First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
+First the I2C interface has to be enabled. Open the Raspberry Pi configuration tool:
 ```
 sudo raspi-config
 ```
