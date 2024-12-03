@@ -59,7 +59,7 @@ Within this file the following settings can be found and adjusted:
 - max_change_percentage: defines the maximum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with big changes such as leaves falling into the trap.
 
 ## Running the timelapse script
-After editing the settings the scirpt to take pictures can be run. This script is called Timelapse_MP.py. It can be run either manually using the python3 command or automatically by setting up a crontab. If needed, additional explaination on both of these methods can be found in the README_beginners.md file. 
+After editing the settings the script to take pictures can be run. This script is called Timelapse_MP.py. It can be run either manually using the python3 command or automatically by setting up a crontab. If needed, additional explaination on both of these methods can be found in the README_beginners.md file. 
 
 ## Installing an RTC unit
 > [!Warning]
