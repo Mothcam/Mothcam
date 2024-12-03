@@ -16,7 +16,6 @@ Mothcam is a repository with the scripts and configuration files designed to set
 **** = When using an OS with a desktop
 ```  
 
-
 ## Downloading the required repositories
 Once the Pi has been started for the first time the following command needs to be run to install the most recent versions of all libraries on the Pi
 ```
@@ -32,49 +31,13 @@ sudo apt install python3-opencv
 ```
 (use sudo apt install -y python3-picamera2 if you need the GUI version)
 
-Lastly, it is recommended to install syncthing to synchronise the folders containing pictures of the moths to a personal database. Here are the instructions to install syncthing
-
-```
-sudo apt install syncthing
-```
-run syncthing by typing
-```
-syncthing
-```
-After the initial run, use ctrl+c to kill the application. Type
-```
-cd ~
-nano ~/.config/syncthing/config.xml
-```
-to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" in row 46 with the following. ctrl + / can be used to jump to this row. 
-```
-<address>0.0.0.0:8384</address>
-```
-> [!WARNING]
-> Changing the address to 0.0.0.0 means any and all other devices are able access the pi's syncthing page when syncthing is running on the pi.
-
-You can have syncthing running at boot by using the following commands (replace "user" with the Pi's username)
-
-````
-sudo systemctl enable syncthing@user
-sudo systemctl start syncthing@user
-````
-
-Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the Pi by typing the following into your browser
-```
-[Pi-IP-address]:8384
-```
-go to "add external device" and enter the device ID of the other device, this ID can be found in the actions menu on the top right of the page. To access syncthing on your device install [Syncthing](https://syncthing.net/downloads/) and open the program on your device.
-Once the devices have added each other it's possible to share folders with each other. To share a folder go to "Add folder" on the syncthing page of the Pi. for the Map location enter 
-```
-~/Mothcam/Pictures/
-```
-Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
-> [!WARNING]
-> The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. Working similarly to a shared OneDrive folder.
+Lastly, it is recommended to install syncthing to synchronise the folders containing pictures of the moths to a personal device, such as a laptop or computer. If needed instructions on how to set up Syncthing can be found in the README_beginners.md file. 
 
 ## Editing the settings of the timelapse script
-To edit the settings of the timelapse script in an easy manner a configuration file can be used. This config file can be edited using the following commands
+To start working with the timelapse script to take pictures certain settings might need to be changed depending on your preference. The standard settings are the ones used during testing which proved to be successful in the capturing of moths on camera.
+
+
+To edit the settings of the timelapse script in an easy manner a configuration file can be used. In this project this config file is named mothconfig.json and can be edited using the following commands
 ```
 cd Mothcam
 nano mothconfig.json
@@ -86,14 +49,17 @@ Within this file the following settings can be found and adjusted:
 -  save_all_images: if set to 'True' two folders will be made, one named Pictures and one named DEL. All pictures the script deems to similar to the previous will be moved into the DEL file. When this setting is set to 'False' all pictures which would otherwise be moved to DEL will be deleted permanently.
 
 - quality: sets the JPEG quality level, can be set to a number from 0-95 with 95 being the highest quality.
-- cam_number: sets the name of the camera in its pictures' file names. E.g. when set to 01 the file name would be as follows cam01_2024-12-2_113500_00001.jpg.
+- cam_number: sets the name of the camera in its pictures' file names. E.g. when set to 01 the file name would be as follows cam01_2024-12-02_113500_00001.jpg. With the following elements respectively following after: date, time at which the picture was taken, and the picture's number.
 - camera_w: sets the width of the pictures in pixels.
 - camera_h: sets the height of the pictures in pixels.
 
 - noise_threshold: defines the minimum pixel value difference (0-255) to be considered as change. Setting this to a higher value reduces sensitivity to small changes (such as changes in lighting) but may miss subtle movements.
-- contour_area_threshold: defines the minimum size (in pixels) of a connected area of changed pixels to be considered significant. This helps filter out very small or insignificant changes 
+- contour_area_threshold: defines the minimum size (in pixels) of a connected area of changed pixels to be considered significant. This helps filter out very small or insignificant changes.
 - min_change_percentage: defines the minimum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with small changes such as a mosquito moving.
 - max_change_percentage: defines the maximum percentage of pixels that needs to change for a picture to be saved. This helps filter out pictures with big changes such as leaves falling into the trap.
+
+## Running the timelapse script
+After editing the settings the scirpt to take pictures can be run. This script is called Timelapse_MP.py. It can be run either manually using the python3 command or automatically by setting up a crontab. If needed, additional explaination on both of these methods can be found in the README_beginners.md file. 
 
 ## Installing an RTC unit
 > [!Warning]
