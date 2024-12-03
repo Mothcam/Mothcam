@@ -177,7 +177,7 @@ E.g.: 45 09 * * * /usr/bin/python3 /home/you_pi_hostname/Mothcam/Timelapse_AF.py
 
 To make sure the Pi starts the script at the correct time an external RTC (real time clock) unit was used. A Raspberry Pi has an internal clock, however, this clock is inaccurate and only syncs to the current time when connected to the internet, if not connected it uses the time it last registered before shutdown. The RTC unit combats this issue.
 
-First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
+First the I2C interface has to be enabled. Open the Raspberry Pi configuration tool:
 ```
 sudo raspi-config
 ```
