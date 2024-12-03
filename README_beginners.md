@@ -26,14 +26,16 @@ The following steps can be followed to install an OS:
 5. In the storage menu select the SD card you want to use. All data on the SD card will be wiped by the imager before the OS is installed
 6. Click on next and click on edit settings
 7. In the general tab:
-   a. Make a Hostname
-   b. Set a username and password
-   c. Enter the wifi settings (preferably of a hotspot or router to allow easy determination of the Pi's IP adress)
-   d. Set the timezone and keyboard settings to your preferred settings
+   -  Make a Hostname
+   -  Set a username and password
+   -   nter the wifi settings (preferably of a hotspot or router to allow easy determination of the Pi's IP adress)
+   -   Set the timezone and keyboard settings to your preferred settings
 8. In the Services menu turn on SSH with password authentication
+9. Save the settings and then click on yes to apply these settings to the OS
+10. After confirming the deletion of any exisiting files on the SD card the imager will write the OS onto the SD card
 
 ## SSH instructions
-How to use SSH to access a Raspberry Pi differs depending on your operating system, [this tutorial](https://www.onlogic.com/blog/how-to-ssh-into-raspberry-pi/) details the steps for Windows, Mac and Ubuntu. All methods require the IP of the Pi, if you are working on a monitor using an HDMI cable the IP can be found using the following command
+To be able to access a Raspberry Pi without it being hooked up to a monitor SSH can be used. How to set up SSH to access a Raspberry Pi differs depending on your operating system, [this tutorial](https://www.onlogic.com/blog/how-to-ssh-into-raspberry-pi/) details the steps for Windows, Mac and Ubuntu. All methods require the IP of the Pi, if you are working on a monitor using an HDMI cable the IP can be found using the following command
 ```
 hostname -I
 ```
@@ -41,11 +43,15 @@ If you are using SSH the Pi's IP can be found on the router of the Wi-Fi network
 
 ## Basic commands to navigate around a Raspberry Pi
 
--  ls: ls is used to list all items in your current working directory
--  cd: cd is used to change directory, this command works by inputting "cd name of directory". E.g. say you want to go into the Mothcam directory you'd input "cd Mothcam". Pay attention to capital letters as Linux is capital sensitive! When you input just "cd" it will send you back to the home directory.
+-  Navigation of menus and files: general navigation through menus and files is possible with the arrow keys. Pressing enter will confirm selection, run commands etc. To save a file use ctrl+X followed by Y and enter.
+-  ctrl + c: this will stop the process you are currently running on the Pi such as a Python script. Note that this only works when manually running a script, not when running a script automatically through crontab.
+-  Right mouse click: used to paste a copied line of text into a Pi's command line.
+-  sudo raspi-config: accesses the settings menu of a Raspberry Pi. Giving the option to e.g. change time-zone, keyboard layout, and enable settings such as Wi-Fi and I2C.
+-  ls: used to list all items in your current working directory
+-  cd: used to change directory, this command works by inputting "cd name of directory". E.g. say you want to go into the Mothcam directory you'd input "cd Mothcam". Pay attention to capital letters as Linux is capital sensitive! When you input just "cd" it will send you back to the home directory.
 -  pwd: displays the path of your current working directory.
 -  sudo: allows a user to run a command with elevated privileges. It is the equivalent of "run as administrator" on Windows.
--  nano: nano is a text editor used to edit things like scirpts, configuration files and crontabs. To use this command input "nano filename". E.g. if you want to edit the file mothconfig.json you'd input "nano mothconfig.json".
+-  nano: a text editor used to edit things like scirpts, configuration files and crontabs. To use this command input "nano filename". E.g. if you want to edit the file mothconfig.json you'd input "nano mothconfig.json".
 -  rm: this command allows you to remove files and directories by inputting "rm filename" to remove a specific file or using "rm -r directory name" to remove an entire directory.
 -  sudo shutdown now: this command shuts the Pi down, using this command prevents unsaved data from corrupting or getting deleted.
 -  sudo reboot: this command reboots the Pi.
@@ -65,7 +71,7 @@ sudo apt install python3-opencv
 ```
 (use sudo apt install -y python3-picamera2 if you need the GUI version)
 
-Lastly, it is recommended to install syncthing to synchronise the folders containing pictures of the moths to a personal database. Here are the instructions to install syncthing
+Lastly, it is recommended to install syncthing to synchronise the folders containing pictures of the moths to a personal folder. Here are the instructions to install syncthing
 
 ```
 sudo apt install syncthing
@@ -74,12 +80,12 @@ run syncthing by typing
 ```
 syncthing
 ```
-After the initial run, use ctrl+c to kill the application. Type
+After the initial run, use ctrl+c to kill the application. To start editing syncthing's configuration file type
 ```
 cd ~
 nano ~/.config/syncthing/config.xml
 ```
-to start editing the config file. In the config file, replace "< address >127.0.0.1:8384< / address >" in row 46 with the following. ctrl + / can be used to jump to this row. 
+In the config file jump to line 46 using ctrl + / and replace "< address >127.0.0.1:8384< / address >" with the following
 ```
 <address>0.0.0.0:8384</address>
 ```
@@ -92,21 +98,34 @@ You can have syncthing running at boot by using the following commands (replace 
 sudo systemctl enable syncthing@user
 sudo systemctl start syncthing@user
 ````
+To check if syncthing runs properly at boot reboot the pi using
+```
+sudo reboot
+```
+Once rebooted use the following command to check the status of Syncthing
+```
+sudo systemctl status syncthing@user
+```
+Replace user in this command with the username you set for the Pi when installing the OS. If syncthing is running you should see "active" within the output of the command.
 
-Now Syncthing is ready to be used, open synthing on your device and open the syncthing page of the Pi by typing the following into your browser
+
+Now Syncthing is ready to be used. To access syncthing on your personal device (such as a laptop or computer) install [Syncthing](https://syncthing.net/downloads/) and open the program. Now open the Pi's Syncthing page by typing the following into your browser
 ```
 [Pi-IP-address]:8384
 ```
-go to "add external device" and enter the device ID of the other device, this ID can be found in the actions menu on the top right of the page. To access syncthing on your device install [Syncthing](https://syncthing.net/downloads/) and open the program on your device.
-Once the devices have added each other it's possible to share folders with each other. To share a folder go to "Add folder" on the syncthing page of the Pi. for the Map location enter 
+go to "add external device" and enter the device ID of your personal device, this ID can be found in the actions menu on the top right of the Syncthing page of your personal device. Once the ID and a name for the device have been entered save the external device. Now head over to you personal device's Syncthing page, this page now has a pop-up at the top asking you to add the Pi, click yes and add the Pi as a device.
+Once the devices have added each other it's possible to share folders with each other. To share a folder go to "Add folder" on the Syncthing page of the Pi. for the map location enter 
 ```
 ~/Mothcam/Pictures/
 ```
-Click on the folder and tap edit and go to the share page. In this page you can select with which added device the folder will be shared.
+Head over to the share tap at the top of the pop-up menu. In this page you can select with which added device(s) the folder will be shared.
 > [!WARNING]
 > The folder will become shared this means if you delete files in this folder on one device, they will be deleted on the other device aswell. Working similarly to a shared OneDrive folder.
 
 ## Editing the settings of the timelapse script
+To start working with the timelapse script to take pictures certain settings might need to be changed depending on your preference. The standard settings are the ones used during testing which proved to be successful in the capturing of moths on camera.
+
+
 To edit the settings of the timelapse script in an easy manner a configuration file can be used. In this project this config file is named mothconfig.json and can be edited using the following commands
 ```
 cd Mothcam
@@ -138,7 +157,7 @@ To run the script automatically at a set time every day a crontab can be created
 ```
 crontab -e
 ```
-At the bottom of this environment a new crontab can be added. The format of a crontab is as follows: minute (00-60), hour (00-24), day of month (00-31), month (00-12) and day of week (0-7) followed by the command you want the crontab to execute. To make the crontab run every minute or hour etc. use an * instead of a number in that spot. E.g. to run the Timelapse_AF.py script at 09.45 AM every day enter the following crontab
+At the bottom of this environment a new crontab can be added. The format of a crontab is as follows: minute (00-60), hour (00-24), day of month (00-31), month (00-12) and day of week (0-7) followed by the command you want the crontab to execute. To make the crontab run every minute or hour etc. use an * instead of a number in that spot. E.g. to start the Timelapse_MP.py script at 09.45 AM every day enter the following crontab
 ```
 45 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_MP.py
 ```
@@ -156,7 +175,7 @@ E.g.: 45 09 * * * /usr/bin/python3 /home/your_pi_hostname/Mothcam/Timelapse_AF.p
 > [!Warning]
 > The RTC module used in these instructions was a DS1307 module, these instructions might not work on another type of RTC module.
 
-To make sure the Pi starts the script at the correct time an external RTC (real time clock) unit was used. A Raspberry Pi has an internal clock however this clock is inaccurate and only syncs to the current time when connected to the internet, if not connected it uses the time it last registered before shutdown. The RTC unit combats this issue.
+To make sure the Pi starts the script at the correct time an external RTC (real time clock) unit was used. A Raspberry Pi has an internal clock, however, this clock is inaccurate and only syncs to the current time when connected to the internet, if not connected it uses the time it last registered before shutdown. The RTC unit combats this issue.
 
 First the I2C interface has to be enabled. Open the Raspnerry Pi configuration tool:
 ```
@@ -174,7 +193,7 @@ Once the tools have been installed use the i2cdetect command to verify the RTC m
 ```
 i2cdetect -y 1
 ```
-In the output of this command look for an adress, typically this is 0x68, this adress indicates the DS1307 module is connected. 
+In the output of this command look for an adress, typically this is 68, this adress indicates the DS1307 module is connected. 
 Next the RTC kernel module needs to be loaded and the RTC needs to be added to the system
 ```
 sudo modprobe rtc-ds1307
@@ -196,7 +215,7 @@ At the end of this file add the following line
 ```
 dtoverlay=i2c-rtc,ds1307
 ```
-After adding the line save and exit the file with Ctrl+O, Enter, Ctrl+X and reboot the Pi
+After adding the line save and exit the file with Ctrl+X, Y and, Enter. Then reboot the Pi.
 
 Optionally the Pi's fake hardware clock can be disabled if this is interfering with the RTC module. In order to do this run the following commands
 ```
